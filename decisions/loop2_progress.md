@@ -113,3 +113,28 @@ HONEST-Mem invariant is intact).
 Tests: 75/75 still pass.
 Cumulative spend: ~$2.50 (D5 added ~$1.25 of claude_cli calls).
 
+
+## 2026-05-26T09:05:00Z — D6 VALIDATED
+
+### PDDC (Part A)
+- Generated 80 train + 20 held-out synthetic trajectories from a KNOWN
+  parameter vector that differs from FSRS-6 defaults on all 5 PDDC
+  signal-mix weights (w_hit, w_support, w_conflict, w_task, bias).
+- Baseline (default-params) loss: 0.01782 (train), 0.01946 (eval)
+- Fitted loss: 0.00395 (train, ~4.5x reduction), 0.00377 (eval, ~5.2x reduction)
+- All 5 fitted signal-mix weights moved in the right direction (5/5 sign match)
+- L-BFGS-B converged in 11 iterations / 0.63s
+
+### GCMP (Part B)
+Promotion-policy decisions on 5 child memories (5/5 correct vs. pre-registered defaults):
+- m0 ("convention" tag, support=5, hits=12, conflicts=0, Δ=0.18) → PROMOTE
+- m1 (no tag, support=1) → reject (low support)
+- m2 (support=4, conflicts=3) → reject (too many conflicts)
+- m3 (support=3, Δ=0.01) → reject (low task-success-delta)
+- m4 ("schema" tag, support=6, hits=14, conflicts=1, Δ=0.22) → PROMOTE
+
+Inheritance-policy filter on the same 5: returned {m0, m2, m3, m4} —
+m1 correctly excluded (no durable tag AND support_count=1 < threshold 3).
+
+Evidence: `decisions/loop2_evidence/d6_pddc_gcmp_report.json`
+

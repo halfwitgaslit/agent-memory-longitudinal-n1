@@ -9,7 +9,7 @@
     "3_skill_fires_in_session": {"status": "validated", "evidence": "decisions/loop2_evidence/d3_skill_fires_report.json"},
     "4_arm_switching": {"status": "validated", "evidence": "decisions/loop2_evidence/d4_arm_switching_report.json"},
     "5_cross_cli_bridging": {"status": "validated", "evidence": "decisions/loop2_evidence/d5_cross_cli_bridging_report.json"},
-    "6_pddc_gcmp_real_shaped": {"status": "pending"},
+    "6_pddc_gcmp_real_shaped": {"status": "validated", "evidence": "decisions/loop2_evidence/d6_pddc_gcmp_report.json"},
     "7_other_silent_failures": {"status": "pending"}
   },
   "evidence_dir": "distillation/phd/decisions/loop2_evidence",

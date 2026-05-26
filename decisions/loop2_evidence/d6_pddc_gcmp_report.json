@@ -1,0 +1,131 @@
+{
+  "started_utc": 1779798770.912779,
+  "part_a_pddc": {
+    "n_train_memories": 80,
+    "n_eval_memories": 20,
+    "true_params_signal_mix": [
+      3.5,
+      1.2,
+      -2.5,
+      2.8,
+      0.4
+    ],
+    "default_params_signal_mix": [
+      2.0,
+      0.5,
+      -1.0,
+      1.5,
+      0.0
+    ],
+    "fitted_params_signal_mix": [
+      2.3883016802992323,
+      0.9810677844989804,
+      -1.6217344821163029,
+      1.776288736347479,
+      0.4419149328954276
+    ],
+    "baseline_train_loss": 0.017818187634234955,
+    "baseline_eval_loss": 0.019461441149032713,
+    "fitted_train_loss": 0.003948902103685009,
+    "fitted_eval_loss": 0.0037729673852111654,
+    "train_loss_reduction": 0.013869285530549946,
+    "eval_loss_reduction": 0.01568847376382155,
+    "sign_match_count_of_5": 5,
+    "fit_elapsed_s": 0.6312389373779297,
+    "fit_info": {
+      "loss": 0.003948902103685009,
+      "n_iters": 11,
+      "success": true
+    },
+    "PASS_strict_improve_train": true,
+    "PASS_strict_improve_eval": true,
+    "PASS_sign_match_majority": true
+  },
+  "part_b_gcmp": {
+    "promotion_decisions": {
+      "m0": {
+        "text": "In roomd we use Pydantic v2 for all schemas",
+        "support": 5,
+        "hits": 12,
+        "conflicts": 0,
+        "task_delta": 0.18,
+        "tags": [
+          "convention"
+        ],
+        "eligible_for_promotion": true
+      },
+      "m1": {
+        "text": "The user prefers terse output",
+        "support": 1,
+        "hits": 2,
+        "conflicts": 0,
+        "task_delta": 0.1,
+        "tags": null,
+        "eligible_for_promotion": false
+      },
+      "m2": {
+        "text": "We deprecated the old auth module",
+        "support": 4,
+        "hits": 8,
+        "conflicts": 3,
+        "task_delta": 0.12,
+        "tags": null,
+        "eligible_for_promotion": false
+      },
+      "m3": {
+        "text": "Logging uses structlog v23+",
+        "support": 3,
+        "hits": 7,
+        "conflicts": 0,
+        "task_delta": 0.01,
+        "tags": null,
+        "eligible_for_promotion": false
+      },
+      "m4": {
+        "text": "DB schema migrations live in alembic/versions/",
+        "support": 6,
+        "hits": 14,
+        "conflicts": 1,
+        "task_delta": 0.22,
+        "tags": [
+          "schema"
+        ],
+        "eligible_for_promotion": true
+      }
+    },
+    "promotion_expected": {
+      "m0": true,
+      "m1": false,
+      "m2": false,
+      "m3": false,
+      "m4": true
+    },
+    "promotion_actual": {
+      "m0": true,
+      "m1": false,
+      "m2": false,
+      "m3": false,
+      "m4": true
+    },
+    "promotion_correct_count": 5,
+    "promotion_total": 5,
+    "inherited_ids": [
+      "m0",
+      "m2",
+      "m3",
+      "m4"
+    ],
+    "inherited_expected": [
+      "m0",
+      "m2",
+      "m3",
+      "m4"
+    ],
+    "inheritance_match": true,
+    "PASS_promotion_all_correct": true,
+    "PASS_inheritance_correct": true
+  },
+  "failures": [],
+  "status": "PASS",
+  "ended_utc": 1779798771.9217012
+}
