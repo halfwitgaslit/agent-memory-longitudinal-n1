@@ -231,6 +231,12 @@ def main() -> int:
     )
     walled_results = walled_backend.search(query="What was the Codex session working on?", k=5)
     walled_count = walled_backend._safe_count_memories(claude_uid)
+    # G9 Loop 4: _safe_count_memories now contracts to return >= 0 always.
+    # Defensive: if a future regression brings -1 back, clamp here too.
+    if walled_count < 0:
+        walled_count_raw = walled_count
+        walled_count = 0
+        report.setdefault("walled_check_diagnostics", {})["clamped_negative_count"] = walled_count_raw
     report["walled_check"] = {
         "scope_with_cli_claude_code_uid": claude_uid,
         "n_memories_under_walled_uid": walled_count,

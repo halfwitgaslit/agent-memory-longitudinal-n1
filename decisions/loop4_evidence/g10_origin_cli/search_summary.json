@@ -1,0 +1,43 @@
+{
+  "markers_found": {
+    "cc": {
+      "marker": "LOOP4_G10_CC_PORCUPINE_5471",
+      "expected_origin_cli": "claude_code",
+      "n_results": 2,
+      "n_with_marker": 1,
+      "found": [
+        {
+          "memory_id": "46f0fc20-29ae-434f-bba8-5f824109e639",
+          "text": "LOOP4_G10_CC_PORCUPINE_5471 is a substantive context identifier originating from the claude_code CLI, created for use in future cross-CLI bridging tests",
+          "origin_cli": "claude_code",
+          "origin_scope_user_id": "vector",
+          "score": 0.47991004054913056
+        }
+      ]
+    },
+    "cx": {
+      "marker": "LOOP4_G10_CX_ZEPPELIN_9938",
+      "expected_origin_cli": "codex",
+      "n_results": 2,
+      "n_with_marker": 1,
+      "found": [
+        {
+          "memory_id": "b6ae8e79-f646-4766-8aca-44873dc00d85",
+          "text": "LOOP4_G10_CX_ZEPPELIN_9938 is a substantive context identifier originating from the codex CLI, created for use in future cross-CLI bridging tests",
+          "origin_cli": "codex",
+          "origin_scope_user_id": "vector",
+          "score": 0.477178636244745
+        }
+      ]
+    }
+  },
+  "origin_cli_observed": {
+    "cc": "claude_code",
+    "cx": "codex"
+  },
+  "verdict": {
+    "cc_origin_cli_correct": true,
+    "cx_origin_cli_correct": true,
+    "g10_pass": true
+  }
+}

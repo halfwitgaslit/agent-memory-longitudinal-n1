@@ -160,5 +160,40 @@ def test_mem0_silent_failure_signals_extended():
         assert signal in src, f"Mem0Backend.add() does not check for {signal!r}"
 
 
+def test_g9_safe_count_memories_never_returns_negative():
+    """G9 Loop 4 invariant: _safe_count_memories MUST return >= 0 even when
+    the backend is uninitialized OR the underlying mem0 call raises. The
+    -1 sentinel that leaked into d5_cross_cli_bridging_report.json's
+    walled_check.n_memories_under_walled_uid is now impossible.
+    """
+    from memory.mem0_backend import Mem0Backend
+    # Force an uninitialized state: instantiate a Mem0Backend but stub _m=None
+    # before any call. Use minimal scope so we can construct cheaply.
+    with tempfile.TemporaryDirectory() as td:
+        b = Mem0Backend(config={"store_dir": td}, scope={"user_id": "t", "project": "g9"})
+        # Force the uninitialized branch
+        b._m = None
+        count = b._safe_count_memories("any-uid")
+        assert count >= 0, f"_safe_count_memories returned negative: {count}"
+        assert count == 0, f"unknown count should fall back to 0; got {count}"
+        # The diagnostic must be present so a caller can distinguish unknown
+        # from "actually empty"
+        assert b._health.last_error is not None
+        assert "not initialized" in b._health.last_error
+
+
+def test_g9_grep_no_negative_sentinel_in_safe_count():
+    """G9 Loop 4 source-level check: the literal `return -1` must not appear
+    in mem0_backend._safe_count_memories (the entry-point external callers
+    use). This is a regression guard for the d5 leakage.
+    """
+    import inspect as ins
+    from memory.mem0_backend import Mem0Backend
+    src = ins.getsource(Mem0Backend._safe_count_memories)
+    assert "return -1" not in src, (
+        "_safe_count_memories still contains `return -1` — G9 regression"
+    )
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-v"]))

@@ -1,0 +1,29 @@
+{
+  "test": "two_concurrent_processes",
+  "n_processes": 2,
+  "results": [
+    {
+      "slot": "A",
+      "store_dir": "/tmp/phd_g7_mem0_qdrant_A",
+      "marker": "G7_MARKER_RAINBOW_ALPHA_3719",
+      "ids": [
+        "c1c46329-4bce-45b2-bcd5-362d502814fa"
+      ],
+      "n_mems": 1,
+      "found_marker": true,
+      "ok": true
+    },
+    {
+      "slot": "B",
+      "store_dir": "/tmp/phd_g7_mem0_qdrant_B",
+      "marker": "G7_MARKER_RAINBOW_BETA_4280",
+      "ids": [
+        "4a6199f1-ddb6-434f-86b1-e4b2c0cfec9f"
+      ],
+      "n_mems": 1,
+      "found_marker": true,
+      "ok": true
+    }
+  ],
+  "all_ok": true
+}

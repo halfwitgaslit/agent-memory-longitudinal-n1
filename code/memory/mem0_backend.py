@@ -7,16 +7,27 @@ Configuration (pre-registered in architecture/v1.md §4.2):
                 routed through `claude -p` subscription billing if no real
                 ANTHROPIC_API_KEY is present (see memory/claude_cli_llm.py).
 
-KNOWN ISSUE (discovered in Loop 2 D7): Mem0 opens a SHARED global qdrant
-at ~/.mem0/migrations_qdrant which is exclusive-locked. Only ONE
-Mem0Backend instance can be alive per process at a time. If you need to
-construct multiple instances:
-  - Close each backend (close its vector_store client) before instantiating the next
-  - OR run each in its own subprocess
-  - OR wipe ~/.mem0/migrations_qdrant between instances (race-prone)
+KNOWN ISSUE (discovered Loop 2 D7, refined Loop 3 Investigator C): Mem0
+opens a SHARED global qdrant at ~/.mem0/migrations_qdrant which is
+exclusive-locked. Only ONE Mem0Backend instance can be alive per process
+at a time AND the lock is not reliably released within the same process
+even after explicit teardown. Specifically, Loop 3 verified that calling
+client.close() followed by gc.collect() and time.sleep(1.0) is NOT
+sufficient: constructing a new Mem0Backend in the same process
+immediately fails with "Storage folder ~/.mem0/migrations_qdrant is
+already accessed by another instance".
+
+The only reliable workaround is SUBPROCESS ISOLATION — each Mem0Backend
+open/close cycle must happen in its own subprocess so OS-level file
+locks are released on process exit. In-process teardown does not work.
+  - PREFERRED: spawn a subprocess for each open/close cycle
+  - AVOID: relying on close() + gc + sleep to free the lock (does not work)
+  - LAST RESORT: wipe ~/.mem0/migrations_qdrant between instances (race-prone)
 
 This is a constraint of the mem0ai library, not our code. Phase 2 eval
-loop will keep one long-lived Mem0Backend instance per arm.
+loop will keep one long-lived Mem0Backend instance per arm; anything that
+needs to cycle backends (e.g. per-arm setup/teardown across multiple
+configs) must use subprocess isolation.
 
 Mem0 v2 surface:
 - m.add(messages, user_id, ...) → list of {id, memory, event, ...}
@@ -189,6 +200,30 @@ class Mem0Backend(MemoryBackend):
             self._record_op("add", latency_ms=(time.time() - t0) * 1000)
             return []
         uid = _scope_to_user_id(self.merged_scope(self.scope, scope))
+        # G10 Loop 4: tag every ingest with originating CLI so the eval
+        # harness can attribute retrieved memories to their source CLI
+        # later — critical in bridge mode where the user_id partition is
+        # shared. The Turn schema (adapters/schema.py) already requires a
+        # `cli` field of {"claude_code","codex"}. Take the modal CLI of
+        # the input turns; if mixed, prefer the first non-None value.
+        origin_cli = None
+        for t in turns:
+            tc = getattr(t, "cli", None)
+            if tc:
+                origin_cli = tc
+                break
+        # Effective scope for metadata stamping (so retrieval-time consumers
+        # can inspect what was set at ingest time).
+        effective_scope = self.merged_scope(self.scope, scope)
+        metadata_for_mem0 = {
+            "_origin_cli": origin_cli or "unknown",
+            "_origin_scope_user_id": effective_scope.get("user_id"),
+            "_origin_scope_project": effective_scope.get("project"),
+            "_origin_scope_worktree": effective_scope.get("worktree"),
+            "_origin_scope_branch": effective_scope.get("branch"),
+            "_origin_scope_cli_at_ingest": effective_scope.get("cli"),
+            "_phd_loop4_ingest_ts_utc": time.time(),
+        }
         # Determine whether the input had substantive content (so a zero-id
         # return means silent extraction failure, not just trivial input).
         total_input_chars = sum(len(m["content"]) for m in messages)
@@ -208,7 +243,7 @@ class Mem0Backend(MemoryBackend):
             prior_level = mem0_logger.level
             mem0_logger.setLevel(logging.ERROR)
             try:
-                result = self._m.add(messages=messages, user_id=uid)
+                result = self._m.add(messages=messages, user_id=uid, metadata=metadata_for_mem0)
             finally:
                 mem0_logger.removeHandler(handler)
                 mem0_logger.setLevel(prior_level)
@@ -287,6 +322,27 @@ class Mem0Backend(MemoryBackend):
                 if mid in seen_ids:
                     continue
                 seen_ids.add(mid)
+                # G10 Loop 4: surface CLI attribution + ingest scope. Mem0
+                # stores per-add metadata in the `metadata` key on each
+                # returned record; we lift our `_origin_cli` and friends up
+                # to the Memory.metadata dict so callers don't have to dig
+                # through `raw`.
+                raw_meta = (it.get("metadata") if isinstance(it, dict) else None) or {}
+                surfaced_meta: Dict[str, Any] = {
+                    "backend": self.backend_name,
+                    "raw": it,
+                }
+                for k_meta in (
+                    "_origin_cli",
+                    "_origin_scope_user_id",
+                    "_origin_scope_project",
+                    "_origin_scope_worktree",
+                    "_origin_scope_branch",
+                    "_origin_scope_cli_at_ingest",
+                    "_phd_loop4_ingest_ts_utc",
+                ):
+                    if k_meta in raw_meta:
+                        surfaced_meta[k_meta] = raw_meta[k_meta]
                 out.append(
                     Memory(
                         memory_id=mid,
@@ -294,7 +350,7 @@ class Mem0Backend(MemoryBackend):
                         score=float(it.get("score", 0.0)),
                         scope=self.merged_scope(self.scope, scope),
                         state="active",
-                        metadata={"backend": self.backend_name, "raw": it},
+                        metadata=surfaced_meta,
                     )
                 )
             # Mem0's hybrid search (vector + BM25) can return more than `k`
@@ -307,13 +363,21 @@ class Mem0Backend(MemoryBackend):
             return []
 
     def _safe_count_memories(self, user_id: str) -> int:
-        """Return real count or -1 (only used internally; never surfaces via inspect).
+        """Return a real non-negative count.
+
+        Post-Loop-4 G9 contract: NEVER returns a negative sentinel. If the
+        underlying mem0 get_all() raises, we set self._health.last_error and
+        return 0. Callers MUST inspect `last_error` if they need to
+        distinguish "store is empty" from "count is unknown."
 
         mem0 v2 moved scope params into a `filters` dict for get_all().
         Try the v2 form first, fall back to the legacy form.
         """
         if not self._m:
-            return -1
+            # Not initialized -> unknown count; report 0 with diagnostic
+            self._health.last_error = "_safe_count_memories: backend not initialized"
+            self._health.last_error_ts_utc = time.time()
+            return 0
         try:
             # v2+ form
             res = self._m.get_all(filters={"user_id": user_id})  # type: ignore[union-attr]
@@ -323,7 +387,7 @@ class Mem0Backend(MemoryBackend):
             except Exception as e:
                 self._health.last_error = f"_safe_count_memories(legacy): {type(e).__name__}: {e}"
                 self._health.last_error_ts_utc = time.time()
-                return -1
+                return 0
         except Exception as e:
             # If v2-form raises for another reason, try the legacy as well
             try:
@@ -334,7 +398,7 @@ class Mem0Backend(MemoryBackend):
                     f"legacy={type(e2).__name__}:{e2}"
                 )
                 self._health.last_error_ts_utc = time.time()
-                return -1
+                return 0
         if isinstance(res, dict):
             return len(res.get("results", []))
         return len(res or [])
