@@ -43,7 +43,13 @@ else:
 
 
 def _backend_factory(arm: str, scope: dict):
-    """Instantiate the configured backend for a given arm."""
+    """Instantiate the configured backend for a given arm.
+
+    Optional env overrides (for eval-time backend configuration):
+      ROOMD_MEM0_STORE_DIR  → Mem0 qdrant store directory
+      ROOMD_MEM0_COLLECTION → Mem0 collection name
+      ROOMD_LETTA_BASE_URL  → Letta server base URL
+    """
     if arm == "null":
         from memory.null_backend import NullBackend
         return NullBackend(scope=scope)
@@ -52,10 +58,18 @@ def _backend_factory(arm: str, scope: dict):
         return RandomBackend(scope=scope)
     if arm == "mem0":
         from memory.mem0_backend import Mem0Backend
-        return Mem0Backend(scope=scope)
+        cfg = {}
+        if os.environ.get("ROOMD_MEM0_STORE_DIR"):
+            cfg["store_dir"] = os.environ["ROOMD_MEM0_STORE_DIR"]
+        if os.environ.get("ROOMD_MEM0_COLLECTION"):
+            cfg["collection"] = os.environ["ROOMD_MEM0_COLLECTION"]
+        return Mem0Backend(scope=scope, config=cfg or None)
     if arm == "letta":
         from memory.letta_backend import LettaBackend
-        return LettaBackend(scope=scope)
+        cfg = {}
+        if os.environ.get("ROOMD_LETTA_BASE_URL"):
+            cfg["base_url"] = os.environ["ROOMD_LETTA_BASE_URL"]
+        return LettaBackend(scope=scope, config=cfg or None)
     if arm == "hindsight":
         from memory.hindsight_backend import HindsightBackend
         return HindsightBackend(scope=scope)

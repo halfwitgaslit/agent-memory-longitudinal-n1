@@ -41,3 +41,27 @@ Evidence: `decisions/loop2_evidence/d3_skill_fires_report.json`.
 Tests: 75/75 still pass.
 Cumulative loop2 spend: ~$1.05.
 
+
+## 2026-05-26T08:25:00Z — D4 VALIDATED
+
+Added env-var-driven backend overrides to retriever factory:
+- `ROOMD_MEM0_STORE_DIR`, `ROOMD_MEM0_COLLECTION` for mem0
+- `ROOMD_LETTA_BASE_URL` for letta
+
+D4 script seeds mem0 once under the exact retriever-built scope (so the
+mem0 arm has data to return), then invokes the retriever for each of
+{null, random, mem0, letta} with the same query.
+
+Result (all 4 arms passed):
+- null:   status=OK, n_results=0 (correct: control)
+- random: status=OK, n_results=0 (random pool empty until populated)
+- mem0:   status=OK, n_results=3, top_score=0.40 (real claude_cli-extracted facts)
+- letta:  status=OK, n_results=0 (live server probed at :8283, no passages
+          under this scope yet)
+
+Each log entry's `arm` field matches the requested arm, confirming the
+factory correctly dispatched.
+
+Evidence: `decisions/loop2_evidence/d4_arm_switching_report.json`
+Cumulative spend: ~$1.25 (D4 added ~$0.20 for the mem0 seed extraction).
+

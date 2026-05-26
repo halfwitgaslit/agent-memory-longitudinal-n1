@@ -1,0 +1,138 @@
+{
+  "started_utc": 1779798007.4068081,
+  "query": "What library do we use for schemas?",
+  "k": 5,
+  "scope": {
+    "user_id": "vector",
+    "project": "roomd",
+    "worktree": "loop2_d4",
+    "branch": "main"
+  },
+  "arms": {
+    "null": {
+      "arm": "null",
+      "exit_code": 0,
+      "elapsed_s": 0.13196921348571777,
+      "stdout_first300": "## Relevant prior knowledge\n\n_(no memories found for arm `null`)_\n",
+      "stderr_first300": "",
+      "log_lines_added": 1,
+      "new_log_entries": [
+        {
+          "arm": "null",
+          "k": 5,
+          "latency_ms": 69,
+          "memory_ids": [],
+          "n_results": 0,
+          "query": "What library do we use for schemas?",
+          "scope": {
+            "branch": "main",
+            "cli": "claude_code",
+            "project": "roomd",
+            "user_id": "vector",
+            "worktree": "loop2_d4"
+          },
+          "status": "OK",
+          "top_score": null,
+          "ts_utc": 1779798024.8499992
+        }
+      ]
+    },
+    "random": {
+      "arm": "random",
+      "exit_code": 0,
+      "elapsed_s": 0.0786590576171875,
+      "stdout_first300": "## Relevant prior knowledge\n\n_(no memories found for arm `random`)_\n",
+      "stderr_first300": "",
+      "log_lines_added": 1,
+      "new_log_entries": [
+        {
+          "arm": "random",
+          "k": 5,
+          "latency_ms": 47,
+          "memory_ids": [],
+          "n_results": 0,
+          "query": "What library do we use for schemas?",
+          "scope": {
+            "branch": "main",
+            "cli": "claude_code",
+            "project": "roomd",
+            "user_id": "vector",
+            "worktree": "loop2_d4"
+          },
+          "status": "OK",
+          "top_score": null,
+          "ts_utc": 1779798024.929634
+        }
+      ]
+    },
+    "mem0": {
+      "arm": "mem0",
+      "exit_code": 0,
+      "elapsed_s": 2.328911066055298,
+      "stdout_first300": "## Relevant prior knowledge\n\nSource: arm=`mem0` k=5 latency=788ms\n\n- `[memory_id=23c08759-4c82-475a-bc75-d5ad8fea41f0 score=0.404]` The roomd project uses Pydantic v2 for all schema definitions\n- `[memory_id=2873861d-7d00-43c9-af38-053a5b0c7219 score=0.338]` The roomd project uses sha1[:16] of canon",
+      "stderr_first300": "Failed to load spaCy lemma model: spaCy is not installed. Install it with: pip install mem0ai[nlp]\nFailed to load spaCy full model: spaCy is not installed. Install it with: pip install mem0ai[nlp]\n",
+      "log_lines_added": 1,
+      "new_log_entries": [
+        {
+          "arm": "mem0",
+          "k": 5,
+          "latency_ms": 788,
+          "memory_ids": [
+            "23c08759-4c82-475a-bc75-d5ad8fea41f0",
+            "2873861d-7d00-43c9-af38-053a5b0c7219",
+            "ef6608c0-c0bf-44e6-b3f8-52a3b48bbc3a"
+          ],
+          "n_results": 3,
+          "query": "What library do we use for schemas?",
+          "scope": {
+            "branch": "main",
+            "cli": "claude_code",
+            "project": "roomd",
+            "user_id": "vector",
+            "worktree": "loop2_d4"
+          },
+          "status": "OK",
+          "top_score": 0.4036968872253951,
+          "ts_utc": 1779798025.749367
+        }
+      ]
+    },
+    "letta": {
+      "arm": "letta",
+      "exit_code": 0,
+      "elapsed_s": 0.32444000244140625,
+      "stdout_first300": "## Relevant prior knowledge\n\n_(no memories found for arm `letta`)_\n",
+      "stderr_first300": "",
+      "log_lines_added": 1,
+      "new_log_entries": [
+        {
+          "arm": "letta",
+          "k": 5,
+          "latency_ms": 271,
+          "memory_ids": [],
+          "n_results": 0,
+          "query": "What library do we use for schemas?",
+          "scope": {
+            "branch": "main",
+            "cli": "claude_code",
+            "project": "roomd",
+            "user_id": "vector",
+            "worktree": "loop2_d4"
+          },
+          "status": "OK",
+          "top_score": null,
+          "ts_utc": 1779798027.562297
+        }
+      ]
+    }
+  },
+  "mem0_seed": {
+    "seeded": true,
+    "pre_count": 0,
+    "post_count": 3,
+    "uid": "phd_68387e1faa9aa9eb"
+  },
+  "failures": [],
+  "status": "PASS",
+  "ended_utc": 1779798027.5916631
+}
