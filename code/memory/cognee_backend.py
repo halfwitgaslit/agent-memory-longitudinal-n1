@@ -112,9 +112,7 @@ class CogneeBackend(MemoryBackend):
             return [mid]
         except Exception as e:
             self._record_op("add", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"cognee add failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("cognee.add", f"{type(e).__name__}: {e}")
             return []
 
     def search(
@@ -161,9 +159,7 @@ class CogneeBackend(MemoryBackend):
             return out
         except Exception as e:
             self._record_op("search", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"cognee search failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("cognee.search", f"{type(e).__name__}: {e}")
             return []
 
     def clear(self) -> None:

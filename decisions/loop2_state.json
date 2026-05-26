@@ -1,0 +1,20 @@
+{
+  "started_utc": "2026-05-25T00:00:00Z",
+  "baseline_tests_passing": "70/70",
+  "git_commit_at_start": "4c913cd",
+  "spend_loop2_usd": 0.0,
+  "deliverables": {
+    "1_silent_failure_reporting": {"status": "pending"},
+    "2_mem0_or_letta_end_to_end": {"status": "pending"},
+    "3_skill_fires_in_session": {"status": "pending"},
+    "4_arm_switching": {"status": "pending"},
+    "5_cross_cli_bridging": {"status": "pending"},
+    "6_pddc_gcmp_real_shaped": {"status": "pending"},
+    "7_other_silent_failures": {"status": "pending"}
+  },
+  "evidence_dir": "distillation/phd/decisions/loop2_evidence",
+  "fixtures_in_use": {
+    "claude_code": "~/.claude/projects/-Users-aiSandbox-github-roomd--claude-worktrees-admiring-merkle-f0e725/8c877d1d-92d2-4e90-a5fb-a8efa211e3e4.jsonl",
+    "codex": "~/.codex/sessions/2026/05/18/rollout-2026-05-18T14-27-15-019e3c57-9f7e-70c2-96b0-de4b5103b39c.jsonl"
+  }
+}

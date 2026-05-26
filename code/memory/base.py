@@ -48,7 +48,17 @@ class Memory(BaseModel):
 
 @dataclass
 class BackendHealth:
-    """Per-backend health snapshot."""
+    """Per-backend health snapshot.
+
+    Notes on honest reporting (post-Loop-2 fix, HONEST-Mem invariant):
+    - `n_memories` MUST be a real count; -1 is FORBIDDEN. If the count cannot
+      be determined, raise from the backend rather than emit a sentinel.
+    - If an add() call results in ZERO extracted facts (e.g. silent LLM
+      failure inside an embedded extractor like Mem0's), `n_errors` MUST be
+      incremented and `healthy` MUST flip to False (with last_error set).
+    - `last_error` is the most-recent error string; `last_error_ts_utc`
+      timestamps it.
+    """
 
     backend_name: str
     healthy: bool
@@ -59,6 +69,9 @@ class BackendHealth:
     n_searches: int = 0
     n_adds: int = 0
     n_errors: int = 0
+    last_error: Optional[str] = None
+    last_error_ts_utc: float = 0.0
+    n_silent_extraction_failures: int = 0
     extra: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -95,21 +108,55 @@ class MemoryBackend(abc.ABC):
         """Return top-k memories for the query, scoped if applicable."""
 
     def inspect(self) -> Dict[str, Any]:
-        """Return a serializable health/diagnostic snapshot."""
+        """Return a serializable health/diagnostic snapshot.
+
+        Post-Loop-2 contract: `n_memories` is ALWAYS a real count or this
+        method raises. Sentinel -1 is forbidden in returned dicts.
+        """
+        n_mem = self._health.n_memories
+        if n_mem < 0:
+            # HONEST-Mem invariant: refuse to lie about counts.
+            raise RuntimeError(
+                f"Backend {self.backend_name}: n_memories sentinel ({n_mem}) "
+                f"detected in inspect(); count not determinable. Last error: "
+                f"{self._health.last_error}"
+            )
         return {
             "backend_name": self.backend_name,
             "healthy": self._health.healthy,
             "error_message": self._health.error_message,
             "embedding_model": self._health.embedding_model,
-            "n_memories": self._health.n_memories,
+            "n_memories": n_mem,
             "cumulative_latency_ms": self._health.cumulative_latency_ms,
             "n_searches": self._health.n_searches,
             "n_adds": self._health.n_adds,
             "n_errors": self._health.n_errors,
+            "last_error": self._health.last_error,
+            "last_error_ts_utc": self._health.last_error_ts_utc,
+            "n_silent_extraction_failures": self._health.n_silent_extraction_failures,
             "uptime_s": time.time() - self._t_start,
             "scope": self.scope,
             "extra": self._health.extra,
         }
+
+    def _record_error(self, kind: str, msg: str, silent_extraction: bool = False) -> None:
+        """Centralized error recording.
+
+        Post-Loop-2 contract:
+        - increments n_errors (always)
+        - sets last_error + last_error_ts_utc
+        - flips `healthy` to False
+        - if silent_extraction=True (add() returned zero new ids when input
+          had substantive content), also increments
+          n_silent_extraction_failures and ensures we mark unhealthy.
+        """
+        self._health.n_errors += 1
+        self._health.last_error = f"{kind}: {msg[:500]}"
+        self._health.last_error_ts_utc = time.time()
+        self._health.error_message = self._health.last_error
+        if silent_extraction:
+            self._health.n_silent_extraction_failures += 1
+        self._health.healthy = False
 
     def decay_step(self, now_utc: Optional[float] = None) -> Dict[str, int]:
         """Apply decay/lifecycle transitions. Default implementation: no-op.

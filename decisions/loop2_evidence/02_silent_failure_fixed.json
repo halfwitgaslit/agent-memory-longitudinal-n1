@@ -1,0 +1,16 @@
+  response = self.client.messages.create(**params)
+{
+  "after_init": {
+    "healthy": true
+  },
+  "after_add": {
+    "ids_returned": [],
+    "n_memories": 0,
+    "n_adds": 1,
+    "n_errors": 1,
+    "healthy": false,
+    "last_error": "mem0.add: silent LLM extraction failure (mem0 swallowed error). captured: LLM extraction failed: \"Could not resolve authentication method. Expected one of api_key, auth_token, or credentials to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\"\n",
+    "n_silent_extraction_failures": 1
+  },
+  "bug_fixed": true
+}

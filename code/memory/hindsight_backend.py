@@ -195,9 +195,7 @@ class HindsightBackend(MemoryBackend):
             return [str(mid)]
         except Exception as e:
             self._record_op("add", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"Hindsight add failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("hindsight.add", f"{type(e).__name__}: {e}")
             return []
 
     def search(
@@ -249,9 +247,7 @@ class HindsightBackend(MemoryBackend):
             return out
         except Exception as e:
             self._record_op("search", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"Hindsight search failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("hindsight.search", f"{type(e).__name__}: {e}")
             return []
 
     def clear(self) -> None:

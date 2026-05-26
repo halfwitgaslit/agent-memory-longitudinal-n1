@@ -135,22 +135,60 @@ class Mem0Backend(MemoryBackend):
             self._record_op("add", latency_ms=(time.time() - t0) * 1000)
             return []
         uid = _scope_to_user_id(self.merged_scope(self.scope, scope))
+        # Determine whether the input had substantive content (so a zero-id
+        # return means silent extraction failure, not just trivial input).
+        total_input_chars = sum(len(m["content"]) for m in messages)
+        substantive = total_input_chars >= 100  # heuristic: ≥100 chars
         try:
-            result = self._m.add(messages=messages, user_id=uid)
+            # Capture mem0's logger output to detect silent LLM failures
+            # (mem0/memory/main.py:747 logs "LLM extraction failed: ..." at
+            # error level but returns successfully with empty results).
+            import logging
+            import io
+
+            mem0_logger = logging.getLogger("mem0")
+            buf = io.StringIO()
+            handler = logging.StreamHandler(buf)
+            handler.setLevel(logging.ERROR)
+            mem0_logger.addHandler(handler)
+            prior_level = mem0_logger.level
+            mem0_logger.setLevel(logging.ERROR)
+            try:
+                result = self._m.add(messages=messages, user_id=uid)
+            finally:
+                mem0_logger.removeHandler(handler)
+                mem0_logger.setLevel(prior_level)
             self._record_op("add", latency_ms=(time.time() - t0) * 1000)
+            captured = buf.getvalue()
             # mem0 returns {"results": [{"id": ..., "memory": ..., "event": "ADD"|"UPDATE"|"NONE"}]}
             ids: List[str] = []
             for r in (result or {}).get("results", []) if isinstance(result, dict) else (result or []):
                 mid = r.get("id") if isinstance(r, dict) else None
                 if mid:
                     ids.append(str(mid))
-            self._health.n_memories = self._count_memories(uid)
+            # Detect silent failure: substantive input but no ids extracted
+            # AND mem0 logged an error
+            silent_fail_signals = (
+                "LLM extraction failed" in captured
+                or "Could not resolve authentication" in captured
+            )
+            if not ids and substantive and silent_fail_signals:
+                self._record_error(
+                    "mem0.add",
+                    f"silent LLM extraction failure (mem0 swallowed error). "
+                    f"captured: {captured[:300]}",
+                    silent_extraction=True,
+                )
+                # Don't update n_memories on failure
+                return []
+            # Real count, fallback to existing count if get_all fails
+            count = self._safe_count_memories(uid)
+            if count >= 0:
+                self._health.n_memories = count
             return ids
         except Exception as e:
             self._record_op("add", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"mem0 add failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("mem0.add", f"{type(e).__name__}: {e}")
             return []
 
     def search(
@@ -190,19 +228,25 @@ class Mem0Backend(MemoryBackend):
             return out
         except Exception as e:
             self._record_op("search", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"mem0 search failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("mem0.search", f"{type(e).__name__}: {e}")
             return []
 
-    def _count_memories(self, user_id: str) -> int:
+    def _safe_count_memories(self, user_id: str) -> int:
+        """Return real count or -1 (only used internally; never surfaces via inspect)."""
         try:
             res = self._m.get_all(user_id=user_id)  # type: ignore[union-attr]
             if isinstance(res, dict):
                 return len(res.get("results", []))
             return len(res or [])
-        except Exception:
+        except Exception as e:
+            # Internal-only sentinel; do NOT propagate to health.n_memories
+            self._health.last_error = f"_safe_count_memories: {type(e).__name__}: {e}"
+            self._health.last_error_ts_utc = time.time()
             return -1
+
+    # Keep old name as alias for any external callers (e.g., tests)
+    def _count_memories(self, user_id: str) -> int:
+        return self._safe_count_memories(user_id)
 
     def clear(self) -> None:
         if not self._m or not self._health.healthy:

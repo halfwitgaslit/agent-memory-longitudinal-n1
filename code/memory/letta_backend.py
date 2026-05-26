@@ -116,6 +116,7 @@ class LettaBackend(MemoryBackend):
         if not text.strip():
             self._record_op("add", latency_ms=(time.time() - t0) * 1000)
             return []
+        substantive = len(text) >= 100
         try:
             # Use archival memory insert (the long-term memory in Letta)
             res = self._client.agents.passages.create(
@@ -131,12 +132,24 @@ class LettaBackend(MemoryBackend):
                         ids.append(pid)
             elif hasattr(res, "id"):
                 ids.append(res.id)
+            # HONEST-Mem: substantive input but zero ids returned == silent failure
+            if substantive and not ids:
+                self._record_error(
+                    "letta.add",
+                    "Letta passages.create returned no ids on substantive input",
+                    silent_extraction=True,
+                )
+                return []
+            # Update count to a real number (best-effort)
+            try:
+                self._health.n_memories = len(list(self._client.agents.passages.list(agent_id=aid, limit=10000) or []))
+            except Exception:
+                # Don't surface sentinel; leave previous count if unknown
+                pass
             return ids
         except Exception as e:
             self._record_op("add", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"Letta add failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("letta.add", f"{type(e).__name__}: {e}")
             return []
 
     def search(
@@ -177,9 +190,7 @@ class LettaBackend(MemoryBackend):
             return out
         except Exception as e:
             self._record_op("search", latency_ms=(time.time() - t0) * 1000, error=True)
-            self._health.error_message = (
-                f"Letta search failed: {type(e).__name__}: {str(e)[:200]}"
-            )
+            self._record_error("letta.search", f"{type(e).__name__}: {e}")
             return []
 
     def clear(self) -> None:

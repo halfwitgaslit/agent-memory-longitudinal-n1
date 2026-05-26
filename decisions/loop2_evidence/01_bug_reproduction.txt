@@ -1,0 +1,33 @@
+# Bug Reproduction — Silent-failure in Mem0Backend
+# Date: 2026-05-25
+# Commit at reproduction: 4c913cd
+
+## Setup
+- Fixture: real Claude Code roomd session (8c877d1d-92d2-4e90-a5fb-a8efa211e3e4.jsonl, 45M)
+- Backend: Mem0Backend with placeholder ANTHROPIC_API_KEY
+- Operation: add(3 turns), then inspect()
+
+## Output (captured from stdout/stderr)
+LLM extraction failed: "Could not resolve authentication method. Expected one of api_key, auth_token, or credentials to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
+Failed to load spaCy lemma model: spaCy is not installed. Install it with: pip install mem0ai[nlp]
+Failed to load spaCy full model: spaCy is not installed. Install it with: pip install mem0ai[nlp]
+parsed 6 turns
+backend healthy: True
+before add: n_mem=0, n_adds=0, n_errors=0
+after add → n_memories: -1, n_adds: 1, n_errors: 0   # ← BUG: n_errors=0 but n_memories=-1 sentinel
+  ids returned: []                                    # ← nothing was actually stored
+  healthy: True                                       # ← backend claims healthy
+search returned 0 results
+
+## Diagnosis
+1. Mem0's mem0/memory/main.py:747 catches LLMException and logs at error level
+2. Mem0's add() returns a successful-shaped result with empty extracted-fact list
+3. Our backend's add() sees a "successful" call → records `_record_op("add", error=False)`
+4. Health: `_count_memories(uid)` calls `get_all()` which throws → except returns -1
+5. Net: `n_errors=0`, `n_memories=-1`, `healthy=True` — silent failure
+
+## Fix plan
+1. After mem0.add() returns, if zero results AND zero ids → treat as failure
+2. Replace sentinel `-1` from `_count_memories` with: raise OR record error+return last_known
+3. Add `last_error` field to BackendHealth and surface in inspect()
+4. inspect()['healthy'] must be False if last operation extracted 0 facts unexpectedly
