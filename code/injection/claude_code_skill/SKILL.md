@@ -42,7 +42,25 @@ harness can later compute hit-rate / recall metrics.
 When invoked, run:
 
 ```bash
-python3 retriever.py --arm "${ROOMD_MEM_ARM:-null}" --query "$1" --k 5
+# The retriever needs the phd code's venv (pydantic, mem0, letta-client, etc.).
+# Resolution order:
+#   1. $ROOMD_PHD_VENV_PYTHON (env override)
+#   2. $HOME/github/claude_can_do_anything/distillation/phd/code/.venv/bin/python (default)
+#   3. python3 (last-resort fallback; will fail if deps missing)
+PHD_PY="${ROOMD_PHD_VENV_PYTHON:-$HOME/github/claude_can_do_anything/distillation/phd/code/.venv/bin/python}"
+[ -x "$PHD_PY" ] || PHD_PY="python3"
+
+# Find the retriever next to this SKILL.md (works for both the in-repo copy
+# and the installed copy under ~/.claude/skills/roomd-memory-retrieval/).
+RETRIEVER_DIR="$(dirname "${BASH_SOURCE[0]:-$0}")"
+"$PHD_PY" "$RETRIEVER_DIR/retriever.py" \
+    --arm "${ROOMD_MEM_ARM:-null}" \
+    --query "$1" \
+    --k 5
 ```
 
 Where `$1` is the first user prompt of the session.
+
+The retriever itself uses `$ROOMD_PHD_CODE_DIR` (env override) or its
+co-located parent directory layout to locate the `memory/` and `adapters/`
+packages.

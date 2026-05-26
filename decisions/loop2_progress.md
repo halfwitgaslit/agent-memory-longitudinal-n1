@@ -23,3 +23,21 @@ Append-only log of meaningful state changes during Loop 2 (end-to-end empirical 
 7. Fix any other silent-failure modes discovered
 
 Methodology: fix → re-run pytest → capture E2E evidence → commit → push.
+
+## 2026-05-26T08:15:00Z — D3 VALIDATED
+
+Fixed two real silent-failure modes surfaced by D3 Part B (claude -p with installed skill):
+
+1. `ModuleNotFoundError: No module named 'memory'` — retriever's `sys.path.insert(parents[2])` resolved to `~/.claude` when installed there. Fixed via env-var + canonical-path candidate list.
+2. `ModuleNotFoundError: No module named 'pydantic'` — system `python3` lacks venv deps. Fixed by updating SKILL.md to invoke `$ROOMD_PHD_VENV_PYTHON` (default: phd code's `.venv/bin/python`).
+
+Both fixes mirrored to installed copy at `~/.claude/skills/roomd-memory-retrieval/`.
+
+Re-ran D3 with fixes:
+- Part A: both arms (null, random) directly invoked → `status: "OK"`, log lines appended.
+- Part B: real `claude -p` session in temp roomd fixture; cost $0.15; skill fired; log entry `{"arm": "null", "n_results": 0, "status": "OK", "latency_ms": 50}`; Claude reported "The retriever ran successfully but found no memories for the query".
+
+Evidence: `decisions/loop2_evidence/d3_skill_fires_report.json`.
+Tests: 75/75 still pass.
+Cumulative loop2 spend: ~$1.05.
+

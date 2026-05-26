@@ -20,8 +20,26 @@ import time
 from pathlib import Path
 
 # Make the phd code importable when the skill is installed into ~/.claude/skills/
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
+# Order of precedence:
+#   1. $ROOMD_PHD_CODE_DIR  (explicit env override)
+#   2. $HOME/github/claude_can_do_anything/distillation/phd/code  (default for Vector)
+#   3. Path(__file__).parents[2] — works when the script lives at
+#      ./injection/claude_code_skill/retriever.py within a phd/code checkout
+ROOT_CANDIDATES = [
+    os.environ.get("ROOMD_PHD_CODE_DIR"),
+    str(Path.home() / "github" / "claude_can_do_anything" / "distillation" / "phd" / "code"),
+    str(Path(__file__).resolve().parents[2]),
+]
+for _candidate in ROOT_CANDIDATES:
+    if not _candidate:
+        continue
+    p = Path(_candidate)
+    if (p / "memory" / "base.py").exists() and (p / "adapters" / "schema.py").exists():
+        sys.path.insert(0, str(p))
+        break
+else:
+    # Fallback to the historic behavior so error messages remain useful
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
 def _backend_factory(arm: str, scope: dict):

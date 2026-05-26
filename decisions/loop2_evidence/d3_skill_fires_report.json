@@ -1,0 +1,93 @@
+{
+  "started_utc": 1779797672.470252,
+  "log_path": "/Users/aiSandbox/.roomd/mem_inject_log.jsonl",
+  "part_a_direct_invocation": [
+    {
+      "arm": "null",
+      "exit_code": 0,
+      "stdout_first200": "## Relevant prior knowledge\n\n_(no memories found for arm `null`)_\n",
+      "stderr_first200": "",
+      "log_lines_added": 1,
+      "new_entries": [
+        {
+          "arm": "null",
+          "k": 5,
+          "latency_ms": 195,
+          "memory_ids": [],
+          "n_results": 0,
+          "query": "How do we hash content in roomd?",
+          "scope": {
+            "branch": "main",
+            "cli": "claude_code",
+            "project": "roomd",
+            "user_id": "vector",
+            "worktree": "loop2_d3_partA"
+          },
+          "status": "OK",
+          "top_score": null,
+          "ts_utc": 1779797672.691503
+        }
+      ]
+    },
+    {
+      "arm": "random",
+      "exit_code": 0,
+      "stdout_first200": "## Relevant prior knowledge\n\n_(no memories found for arm `random`)_\n",
+      "stderr_first200": "",
+      "log_lines_added": 1,
+      "new_entries": [
+        {
+          "arm": "random",
+          "k": 5,
+          "latency_ms": 48,
+          "memory_ids": [],
+          "n_results": 0,
+          "query": "How do we hash content in roomd?",
+          "scope": {
+            "branch": "main",
+            "cli": "claude_code",
+            "project": "roomd",
+            "user_id": "vector",
+            "worktree": "loop2_d3_partA"
+          },
+          "status": "OK",
+          "top_score": null,
+          "ts_utc": 1779797672.770582
+        }
+      ]
+    }
+  ],
+  "part_b_real_session": {
+    "fixture_dir": "/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/d3_roomd_fixture_ddq3liuc",
+    "arm": "null",
+    "exit_code": 0,
+    "claude_result_first300": "The retriever ran successfully but **found no memories** for the query. \n\nHere's what happened:\n- **Retriever invoked**: \u2713 \n- **Arm**: `null` (control arm)\n- **Query**: \"How do we hash content in roomd?\"\n- **K**: 5 (max memories to retrieve)\n- **Result**: _(no memories found for arm `null`)_\n\nThis i",
+    "claude_cost_usd": 0.15477844999999998,
+    "claude_session_id": "94978bf9-bf22-4f45-8d71-590b0a776cef",
+    "log_lines_added": 1,
+    "new_log_entries": [
+      {
+        "arm": "null",
+        "k": 5,
+        "latency_ms": 50,
+        "memory_ids": [],
+        "n_results": 0,
+        "query": "How do we hash content in roomd?",
+        "scope": {
+          "branch": "main",
+          "cli": "claude_code",
+          "project": "roomd",
+          "user_id": "aiSandbox",
+          "worktree": "loop2_d3_partB"
+        },
+        "status": "OK",
+        "top_score": null,
+        "ts_utc": 1779797688.280511
+      }
+    ],
+    "skill_fired": true,
+    "stderr_first300": ""
+  },
+  "ended_utc": 1779797693.116954,
+  "status": "PASS"
+}

@@ -35,14 +35,14 @@
       "error_message": null,
       "embedding_model": "none",
       "n_memories": 0,
-      "cumulative_latency_ms": 0.0011920928955078125,
+      "cumulative_latency_ms": 0.0,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 6.934370040893555,
+      "uptime_s": 7.771293878555298,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -86,14 +86,14 @@
       "error_message": null,
       "embedding_model": "none",
       "n_memories": 3,
-      "cumulative_latency_ms": 0.04792213439941406,
+      "cumulative_latency_ms": 0.048160552978515625,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 6.934493064880371,
+      "uptime_s": 7.771413087844849,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -115,14 +115,14 @@
       {
         "query": "Which Python version do we target?",
         "n_results": 3,
-        "top_score": 0.8833309090870785,
-        "top_text_snippet": "The roomd project targets Python 3.13 as its Python version"
+        "top_score": 0.7339230393353602,
+        "top_text_snippet": "The roomd project targets Python 3.13"
       },
       {
         "query": "How do we generate stable IDs?",
         "n_results": 3,
-        "top_score": 0.7002664067635918,
-        "top_text_snippet": "The roomd project uses sha1[:16] (first 16 hex characters of the SHA-1 hash) of canonical content as the ID convention f"
+        "top_score": 0.7122300525957759,
+        "top_text_snippet": "The roomd project uses sha1 hash truncated to 16 characters (sha1[:16]) of the canonical content as the preferred conven"
       },
       {
         "query": "What's our convention for git worktrees?",
@@ -137,21 +137,21 @@
       "error_message": null,
       "embedding_model": "BAAI/bge-small-en-v1.5",
       "n_memories": 6,
-      "cumulative_latency_ms": 84320.54615020752,
+      "cumulative_latency_ms": 90793.72143745422,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 91.25693106651306,
+      "uptime_s": 98.56704473495483,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
       },
       "extra": {
         "collection": "phd_cd153d69287af192",
-        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-20/memory_smoke0/mem0_qdrant",
+        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-21/memory_smoke0/mem0_qdrant",
         "llm_provider": "claude_cli",
         "llm_model": "claude-haiku-4-5"
       }
@@ -200,7 +200,7 @@
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 91.33269786834717,
+      "uptime_s": 98.64977407455444,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -249,14 +249,14 @@
       "error_message": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
       "embedding_model": "BAAI/bge-small-en-v1.5",
       "n_memories": 0,
-      "cumulative_latency_ms": 55.90486526489258,
+      "cumulative_latency_ms": 55.680036544799805,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 7,
       "last_error": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
-      "last_error_ts_utc": 1779771161.566876,
+      "last_error_ts_utc": 1779797840.8759549,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 91.21136093139648,
+      "uptime_s": 98.4928240776062,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -303,14 +303,14 @@
       "error_message": null,
       "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
       "n_memories": 3,
-      "cumulative_latency_ms": 0.04696846008300781,
+      "cumulative_latency_ms": 0.06103515625,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 88.3307089805603,
+      "uptime_s": 95.48684024810791,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
