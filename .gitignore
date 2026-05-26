@@ -1,0 +1,27 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Phase 2 results (not part of pre-registration — generated AFTER lock)
+results/
+logs/
+
+# Local fixtures with potentially private session data
+code/fixtures/private/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Sandbox / temp
+*.tmp
+*.bak

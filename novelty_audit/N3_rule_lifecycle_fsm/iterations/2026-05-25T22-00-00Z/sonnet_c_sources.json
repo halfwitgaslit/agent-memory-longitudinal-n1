@@ -1,0 +1,102 @@
+[
+  {
+    "id": "fsrs_anki",
+    "title": "FSRS (Free Spaced Repetition Scheduler) — Anki",
+    "url": "https://github.com/open-spaced-repetition/fsrs4anki",
+    "year": 2022,
+    "domain": "cognitive_psychology_spaced_repetition",
+    "similarity_to_N3": 0.45,
+    "verdict": "partial_overlap",
+    "notes": "Empirically calibrates 21 decay parameters per user from real review data (gradient descent, log-loss). No lifecycle FSM. Signal is binary human recall, not agent task-success. Substrate is flashcard, not named rule record."
+  },
+  {
+    "id": "fsrs6_technical",
+    "title": "A technical explanation of FSRS — Expertium",
+    "url": "https://expertium.github.io/Algorithm.html",
+    "year": 2024,
+    "domain": "cognitive_psychology_spaced_repetition",
+    "similarity_to_N3": 0.45,
+    "verdict": "partial_overlap",
+    "notes": "Per-user w20 parameter (personalized decay exponent) fitted from review history. FSRS-6 trained on 700M reviews from 10K users for default values."
+  },
+  {
+    "id": "koren2010_temporal_cf",
+    "title": "Collaborative Filtering with Temporal Dynamics — Koren 2010",
+    "url": "https://dl.acm.org/doi/10.1145/1557019.1557072",
+    "year": 2010,
+    "domain": "recommendation_systems",
+    "similarity_to_N3": 0.35,
+    "verdict": "partial_overlap",
+    "notes": "Fits exponential decay parameters on user preference drift from real rating data via gradient descent. No FSM, no named rule records. Calibration signal is rating prediction loss."
+  },
+  {
+    "id": "ssgm_2603_11768",
+    "title": "Governing Evolving Memory in LLM Agents: SSGM Framework",
+    "url": "https://arxiv.org/abs/2603.11768",
+    "year": 2026,
+    "domain": "agent_memory",
+    "similarity_to_N3": 0.30,
+    "verdict": "partial_overlap",
+    "notes": "Weibull decay function proposed for memory relevance with freshness threshold. No formal FSM lifecycle states. Decay parameters not calibrated from deployment data — theoretical only."
+  },
+  {
+    "id": "fademem_2601_18642",
+    "title": "FadeMem: Biologically-Inspired Forgetting for Efficient Agent Memory",
+    "url": "https://arxiv.org/abs/2601.18642",
+    "year": 2026,
+    "domain": "agent_memory",
+    "similarity_to_N3": 0.30,
+    "verdict": "partial_overlap",
+    "notes": "Shape parameters 0.8 (LML) and 1.2 (SML) appear to be design choices (biologically inspired), not fitted from deployment data. No FSM lifecycle states (draft/active/deprecated/archived)."
+  },
+  {
+    "id": "schaul2016_per",
+    "title": "Prioritized Experience Replay — Schaul et al. 2016",
+    "url": "https://arxiv.org/abs/1511.05952",
+    "year": 2016,
+    "domain": "reinforcement_learning",
+    "similarity_to_N3": 0.20,
+    "verdict": "survived",
+    "notes": "Priority (TD-error) drives replay buffer sampling. No FSM, no named rule records, no explicit lifecycle retirement. Implicit decay via never-sampling stale entries."
+  },
+  {
+    "id": "iso_15489",
+    "title": "ISO 15489-1:2016 Records Management",
+    "url": "https://www.iso.org/standard/62542.html",
+    "year": 2016,
+    "domain": "records_management",
+    "similarity_to_N3": 0.25,
+    "verdict": "partial_overlap",
+    "notes": "Defines record lifecycle FSM (create, capture, manage, dispose). Transitions are policy-driven by fixed time windows / legal requirements. No empirical calibration from usage signals."
+  },
+  {
+    "id": "arc_cache",
+    "title": "Adaptive Replacement Cache (ARC) — Megiddo & Modha 2003",
+    "url": "https://www.usenix.org/conference/fast-03/arc-self-tuning-low-overhead-replacement-cache",
+    "year": 2003,
+    "domain": "caching_theory",
+    "similarity_to_N3": 0.15,
+    "verdict": "survived",
+    "notes": "Self-tunes partition parameter p online (closest to empirical calibration in caching). Binary in/out eviction, no FSM, no named rules."
+  },
+  {
+    "id": "bm25_temporal",
+    "title": "Temporal BM25 / Document Freshness Scoring",
+    "url": "https://www.lix.polytechnique.fr/dascim/wp-content/uploads/papers/TempWeb_fp00n-karkali.pdf",
+    "year": 2013,
+    "domain": "information_retrieval",
+    "similarity_to_N3": 0.15,
+    "verdict": "survived",
+    "notes": "Exponential decay on document age for freshness ranking. Empirical parameter selection by grid search. No FSM, no rule records, IR metrics not agent utility."
+  },
+  {
+    "id": "supermemo_sm17_sm18",
+    "title": "SuperMemo SM-17 / SM-18 Algorithm",
+    "url": "https://supermemo.guru/wiki/Algorithm_SM-17",
+    "year": 2019,
+    "domain": "cognitive_psychology_spaced_repetition",
+    "similarity_to_N3": 0.40,
+    "verdict": "partial_overlap",
+    "notes": "Forgetting index framework with power-regression curve fitting per item. No lifecycle FSM. Calibrates retrieval probability decay, not agent rule utility."
+  }
+]

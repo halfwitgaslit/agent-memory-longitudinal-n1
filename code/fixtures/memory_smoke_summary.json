@@ -1,0 +1,263 @@
+{
+  "null": {
+    "label": "null",
+    "backend_name": "null",
+    "health_pre": {
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "none"
+    },
+    "status": "OK",
+    "n_adds_executed": 0,
+    "search_results": [
+      {
+        "query": "Which Python version do we target?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "How do we generate stable IDs?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "What's our convention for git worktrees?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      }
+    ],
+    "health_post": {
+      "backend_name": "null",
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "none",
+      "n_memories": 0,
+      "cumulative_latency_ms": 0.00095367431640625,
+      "n_searches": 3,
+      "n_adds": 3,
+      "n_errors": 0,
+      "uptime_s": 8.356331825256348,
+      "scope": {
+        "user_id": "vector",
+        "project": "roomd"
+      },
+      "extra": {}
+    }
+  },
+  "random": {
+    "label": "random",
+    "backend_name": "random",
+    "health_pre": {
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "none"
+    },
+    "status": "OK",
+    "n_adds_executed": 3,
+    "search_results": [
+      {
+        "query": "Which Python version do we target?",
+        "n_results": 3,
+        "top_score": 0.7415504997598329,
+        "top_text_snippet": "[user] The roomd project uses git worktrees extensively; each worktree is treated as an isolated branch.\n[assistant] Not"
+      },
+      {
+        "query": "How do we generate stable IDs?",
+        "n_results": 3,
+        "top_score": 0.03178267948178359,
+        "top_text_snippet": "[user] We use Pydantic v2 for all schema definitions in the roomd project.\n[assistant] Got it. I will use Pydantic v2 Ba"
+      },
+      {
+        "query": "What's our convention for git worktrees?",
+        "n_results": 3,
+        "top_score": 0.7160196129224035,
+        "top_text_snippet": "[user] The roomd project uses git worktrees extensively; each worktree is treated as an isolated branch.\n[assistant] Not"
+      }
+    ],
+    "health_post": {
+      "backend_name": "random",
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "none",
+      "n_memories": 3,
+      "cumulative_latency_ms": 0.058650970458984375,
+      "n_searches": 3,
+      "n_adds": 3,
+      "n_errors": 0,
+      "uptime_s": 8.356462240219116,
+      "scope": {
+        "user_id": "vector",
+        "project": "roomd"
+      },
+      "extra": {}
+    }
+  },
+  "mem0": {
+    "label": "mem0",
+    "backend_name": "mem0",
+    "health_pre": {
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "BAAI/bge-small-en-v1.5"
+    },
+    "status": "OK",
+    "n_adds_executed": 0,
+    "search_results": [
+      {
+        "query": "Which Python version do we target?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "How do we generate stable IDs?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "What's our convention for git worktrees?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      }
+    ],
+    "health_post": {
+      "backend_name": "mem0",
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "n_memories": -1,
+      "cumulative_latency_ms": 80.70588111877441,
+      "n_searches": 3,
+      "n_adds": 3,
+      "n_errors": 0,
+      "uptime_s": 8.437253952026367,
+      "scope": {
+        "user_id": "vector",
+        "project": "roomd"
+      },
+      "extra": {
+        "collection": "phd_cd153d69287af192",
+        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-11/memory_smoke0/mem0_qdrant",
+        "llm_model": "claude-3-5-haiku-latest"
+      }
+    }
+  },
+  "letta": {
+    "label": "letta",
+    "backend_name": "letta",
+    "health_pre": {
+      "healthy": false,
+      "error_message": "Letta server unreachable at http://localhost:8283: APIConnectionError: Connection error.",
+      "embedding_model": null
+    },
+    "status": "SKIPPED-UNHEALTHY"
+  },
+  "cognee": {
+    "label": "cognee",
+    "backend_name": "cognee",
+    "health_pre": {
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "BAAI/bge-small-en-v1.5"
+    },
+    "status": "OK",
+    "n_adds_executed": 0,
+    "search_results": [
+      {
+        "query": "Which Python version do we target?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "How do we generate stable IDs?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "What's our convention for git worktrees?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      }
+    ],
+    "health_post": {
+      "backend_name": "cognee",
+      "healthy": true,
+      "error_message": "cognee search failed: NoDataError: NoDataError: No data found in the system, please add data first. (Status code: 404)",
+      "embedding_model": "BAAI/bge-small-en-v1.5",
+      "n_memories": 0,
+      "cumulative_latency_ms": 1561.9354248046875,
+      "n_searches": 3,
+      "n_adds": 3,
+      "n_errors": 6,
+      "uptime_s": 7.651855945587158,
+      "scope": {
+        "user_id": "vector",
+        "project": "roomd"
+      },
+      "extra": {
+        "dataset": "phd_2173920896",
+        "v": "1.1.0"
+      }
+    }
+  },
+  "hindsight": {
+    "label": "hindsight",
+    "backend_name": "hindsight",
+    "health_pre": {
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+    },
+    "status": "OK",
+    "n_adds_executed": 3,
+    "search_results": [
+      {
+        "query": "Which Python version do we target?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "How do we generate stable IDs?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      },
+      {
+        "query": "What's our convention for git worktrees?",
+        "n_results": 0,
+        "top_score": null,
+        "top_text_snippet": null
+      }
+    ],
+    "health_post": {
+      "backend_name": "hindsight",
+      "healthy": true,
+      "error_message": null,
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+      "n_memories": 3,
+      "cumulative_latency_ms": 0.0553131103515625,
+      "n_searches": 3,
+      "n_adds": 3,
+      "n_errors": 0,
+      "uptime_s": 5.234418153762817,
+      "scope": {
+        "user_id": "vector",
+        "project": "roomd"
+      },
+      "extra": {
+        "db_url": "postgresql://hindsight:hindsight@127.0.0.1:5432/hindsight",
+        "namespace": "phd_2173920896",
+        "ensure_bank_error": "MemoryEngine.list_banks() got an unexpected keyword argument 'context'"
+      }
+    }
+  }
+}

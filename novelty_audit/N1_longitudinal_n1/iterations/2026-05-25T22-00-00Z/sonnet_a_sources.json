@@ -1,0 +1,182 @@
+[
+  {
+    "url": "https://arxiv.org/abs/2507.09089",
+    "title": "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 7,
+    "date_published": "2025-07-10",
+    "kills_claim_yes_no": "no",
+    "notes": "Closest methodological match: RCT with 16 developers, task-level randomization, real coding work, real outcomes. Missing: no memory system evaluated, N=16 not n=1, no pre-registration mentioned."
+  },
+  {
+    "url": "https://arxiv.org/abs/2509.20353",
+    "title": "Developer Productivity With and Without GitHub Copilot: A Longitudinal Mixed-Methods Case Study",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 6,
+    "date_published": "2025-09",
+    "kills_claim_yes_no": "no",
+    "notes": "Longitudinal 2-year study of real developers with AI coding assistant. Missing: no memory system, N=39, no pre-registered protocol, no randomized memory configurations, no time-series task-level outcomes."
+  },
+  {
+    "url": "https://medium.com/@mrsandelin/the-first-controlled-benchmark-of-ai-memory-in-coding-agents-8e0bb776d39e",
+    "title": "The First Controlled Benchmark of AI Memory in Coding Agents (Stompy/Sandelin)",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 8,
+    "date_published": "2025-2026",
+    "kills_claim_yes_no": "no",
+    "notes": "CLOSEST STRUCTURAL MATCH. Single codebase, controlled memory conditions (on/off/hybrid), real coding tasks, outcome metrics (quality, tokens, turns). BUT: only 9 runs (not >50 sessions), not pre-registered, not longitudinal, blog post not peer-reviewed, explicitly a pilot. Author explicitly plans 27-session longitudinal follow-up NOT YET PUBLISHED."
+  },
+  {
+    "url": "https://arxiv.org/abs/2601.10258",
+    "title": "Evolving with AI: A Longitudinal Analysis of Developer Logs",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 5,
+    "date_published": "2026-01",
+    "kills_claim_yes_no": "no",
+    "notes": "800 developers, 2-year telemetry, AI coding assistants. Longitudinal but not memory system, not n=1, not pre-registered, no randomized conditions."
+  },
+  {
+    "url": "https://snap-research.github.io/locomo/",
+    "title": "LoCoMo: Evaluating Very Long-Term Conversational Memory of LLM Agents (ACL 2024)",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 4,
+    "date_published": "2024",
+    "kills_claim_yes_no": "no",
+    "notes": "Multi-session (up to 35 sessions, 300 turns) memory benchmark. Synthetic dialogues, not real developer deployment, not coding-specific, not pre-registered."
+  },
+  {
+    "url": "https://arxiv.org/abs/2512.12818",
+    "title": "Hindsight is 20/20: Building Agent Memory that Retains, Recalls, and Reflects",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2024-12",
+    "kills_claim_yes_no": "no",
+    "notes": "Technical agent memory paper, benchmark evaluation (LongMemEval, LoCoMo). Not real-user deployment, not longitudinal field study, not n=1."
+  },
+  {
+    "url": "https://arxiv.org/abs/2507.00014",
+    "title": "SWE-Bench-CL: Continual Learning for Coding Agents",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 4,
+    "date_published": "2025-07",
+    "kills_claim_yes_no": "no",
+    "notes": "Chronological coding task sequences for continual learning evaluation, FAISS memory. Synthetic benchmark, no human developer in loop, not pre-registered."
+  },
+  {
+    "url": "https://arxiv.org/abs/2502.13791",
+    "title": "From Tools to Teammates: Evaluating LLMs in Multi-Session Coding Interactions (ACL 2025)",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2025-02",
+    "kills_claim_yes_no": "no",
+    "notes": "Multi-session coding memory evaluation. Synthetic MemoryCode dataset. No real developer deployment."
+  },
+  {
+    "url": "https://arxiv.org/abs/2510.07925",
+    "title": "Enabling Personalized Long-term Interactions in LLM-based Agents through Persistent Memory and User Profiles",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 5,
+    "date_published": "2025-10",
+    "kills_claim_yes_no": "no",
+    "notes": "Agent memory system with a 5-day pilot user study. Real users, real memory system, perceived personalization outcomes. BUT: only 5 days, not coding-specific, not >50 sessions, no pre-registration, participant count not disclosed."
+  },
+  {
+    "url": "https://arxiv.org/abs/2605.12493",
+    "title": "LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2026-05",
+    "kills_claim_yes_no": "no",
+    "notes": "Agent memory benchmark with coding variant (AgentRunbook-C). 451 curated questions. Synthetic, not real-user deployment, not longitudinal field study."
+  },
+  {
+    "url": "https://metr.org/blog/2026-02-24-uplift-update/",
+    "title": "We are Changing our Developer Productivity Experiment Design — METR",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 4,
+    "date_published": "2026-02-24",
+    "kills_claim_yes_no": "no",
+    "notes": "METR retrospective acknowledging measurement failures of longitudinal developer productivity studies. Useful as evidence that rigorous within-person AI coding study methodology remains unsolved. No memory system."
+  },
+  {
+    "url": "https://mem0.ai/blog/state-of-ai-agent-memory-2026",
+    "title": "State of AI Agent Memory 2026: Benchmarks, Architectures & Production Gaps",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2026",
+    "kills_claim_yes_no": "no",
+    "notes": "Industry survey explicitly identifying lack of real-world user studies as a production gap for agent memory systems. Supports novelty claim."
+  },
+  {
+    "url": "https://arxiv.org/abs/2412.06603",
+    "title": "Examining the Use and Impact of an AI Code Assistant on Developer Productivity and Experience in the Enterprise (CHI EA '25)",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2024-12",
+    "kills_claim_yes_no": "no",
+    "notes": "669 survey respondents + usability study on IBM watsonx Code Assistant. Real enterprise deployment but no memory system, not longitudinal, not n=1."
+  },
+  {
+    "url": "https://arxiv.org/abs/2310.10634",
+    "title": "OpenAgents: An Open Platform for Language Agents in the Wild",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 2,
+    "date_published": "2023-10",
+    "kills_claim_yes_no": "no",
+    "notes": "STALE-RISK. Real users interact with agents in the wild (Data Agent, Plugins, Web). Not longitudinal, not memory-system evaluation, not n=1."
+  },
+  {
+    "url": "https://arxiv.org/abs/2509.19708",
+    "title": "Intuition to Evidence: Measuring AI's True Impact on Developer Productivity",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 5,
+    "date_published": "2025-09",
+    "kills_claim_yes_no": "no",
+    "notes": "300 engineers, 12-month longitudinal study, within-subjects controls. Real coding work, real productivity outcomes. Missing: no memory system, N=300, not n=1, not pre-registered."
+  },
+  {
+    "url": "https://arxiv.org/abs/2602.16313",
+    "title": "MemoryArena: Benchmarking Agent Memory in Interdependent Multi-Session Agentic Tasks",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2026-02",
+    "kills_claim_yes_no": "no",
+    "notes": "Multi-session memory benchmark for agents. Synthetic agentic tasks. No real human developer deployment."
+  },
+  {
+    "url": "https://arxiv.org/abs/2505.16067",
+    "title": "How Memory Management Impacts LLM Agents: An Empirical Study of Experience-Following Behavior",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 2,
+    "date_published": "2025-05",
+    "kills_claim_yes_no": "no",
+    "notes": "Laboratory empirical study of memory management in LLM agents. No real developer deployment, no longitudinal design."
+  },
+  {
+    "url": "https://www.letta.com/blog/letta-code",
+    "title": "Letta Code: A Memory-First Coding Agent",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 2,
+    "date_published": "2025-12-16",
+    "kills_claim_yes_no": "no",
+    "notes": "Product announcement blog. No user study, no longitudinal data, benchmark (Terminal-Bench) only."
+  },
+  {
+    "url": "https://arxiv.org/abs/2211.06479",
+    "title": "Calculating Cognitive Augmentation, A Case Study",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 2,
+    "date_published": "2022-11",
+    "kills_claim_yes_no": "no",
+    "notes": "STALE-RISK. Proposes formal metrics for AI cognitive augmentation via case study. Not LLM agent memory, not coding-specific, not longitudinal."
+  },
+  {
+    "url": "https://arxiv.org/abs/2601.13597",
+    "title": "AI IDEs or Autonomous Agents? Measuring the Impact of Coding Agents on Software Development",
+    "accessed_at": "2026-05-25T22:00:00Z",
+    "relevance_score_1_to_10": 3,
+    "date_published": "2026-01",
+    "kills_claim_yes_no": "no",
+    "notes": "Calls for longitudinal evidence on autonomous coding agents. Itself not a longitudinal study of memory systems. No real developer deployment of memory system."
+  }
+]

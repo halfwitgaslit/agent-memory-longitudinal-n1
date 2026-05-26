@@ -1,0 +1,64 @@
+{
+  "build_started_utc": "2026-05-25T22:00:00Z",
+  "phase1_completed_utc": "2026-05-26T03:00:00Z",
+  "framing_locked": true,
+  "title": "Pre-Registered N-of-1 Longitudinal Evaluation of Agent-Memory Frameworks on a Coding-CLI Substrate",
+  "target_venue": "ICLR 2027 main track (Sep-Oct 2026 deadline)",
+  "phase": "1-complete",
+  "preregistration_hash_sha256": "14645d41cc73fe32f82d8ac4ba9b6aa0940750be244d0473a3f29553b21b6fea",
+  "venv_path": "distillation/phd/code/.venv",
+  "python_version": "3.13.12",
+  "installed_packages_count": 363,
+  "deliverables_state": {
+    "A_architecture_doc": "COMPLETE — phd/architecture/v1.md",
+    "B_adapters": "COMPLETE — schema + claude_code + codex adapters; 34 round-trip tests pass on 10+10 real sessions",
+    "C_memory_backends": "COMPLETE — Mem0/Letta/Hindsight/Cognee/Null/Random all behind ABC; 7 smoke tests pass (Letta documented SKIPPED)",
+    "D_novel_layer": "COMPLETE — PDDC (8 tests, recovers truth on synthetic) + GCMP (8 tests) + HONEST-Mem reporter",
+    "E_injection_mechanism": "COMPLETE — Claude Code skill (SKILL.md + retriever.py) + Codex inject.sh; tested end-to-end",
+    "F_eval_harness": "COMPLETE — runner.py + metrics.py + stats.py + pre_registration.py; 13 tests pass; runs against real 30-session sample",
+    "G_preregistration": "COMPLETE — phd/preregistration/v1.md with locked hash 14645d41cc73fe32f82d8ac4ba9b6aa0940750be244d0473a3f29553b21b6fea (NOT YET git-committed — that locks priority timestamp)",
+    "H_datasheet": "COMPLETE — phd/paper/datasheet.md (Gebru et al. 2021 format)",
+    "I_paper_draft_v0_1": "COMPLETE — phd/paper/v0.1.md (25 KB markdown) + v0.1.pdf (113 KB) compiled via weasyprint",
+    "J_repro_package": "COMPLETE — Dockerfile + Makefile (smoke/precheck/preregister/eval_corpus/paper) + requirements_frozen.txt"
+  },
+  "test_summary": {
+    "total_tests": 70,
+    "all_passing": true,
+    "by_module": {
+      "test_adapters.py": 34,
+      "test_memory_smoke.py": 7,
+      "test_calibration.py": 8,
+      "test_governance.py": 8,
+      "test_eval.py": 13
+    }
+  },
+  "corpus_health": {
+    "claude_code_roomd_project_dirs": 42,
+    "claude_code_roomd_jsonl_files_nonempty": 176,
+    "codex_total_jsonl": 924,
+    "codex_roomd_filtered": 610,
+    "phase1_eval_runner_sample": 30
+  },
+  "memory_smoke_summary": {
+    "null": "OK",
+    "random": "OK",
+    "mem0": "OK (fastembed + qdrant + Anthropic Haiku)",
+    "letta": "SKIPPED-UNHEALTHY (no local server; documented degradation)",
+    "hindsight": "OK (embedded pg0 + MiniLM-L6 + Anthropic Haiku)",
+    "cognee": "OK (LanceDB + fastembed; search-time NoDataError without LLM credentials for cognify)"
+  },
+  "spend_tracking": {
+    "starting_cumulative_usd": 29.069,
+    "ending_cumulative_usd": 29.069,
+    "phase_1_actual_spend_usd": 0.0,
+    "note": "All backends used local embeddings; Anthropic Haiku in smoke was placeholder (no actual API calls). Spend ledger unchanged from pre-build baseline."
+  },
+  "next_action_on_resume": "Phase 2 deployment kickoff. Steps: (a) install Claude Code skill into ~/.claude/skills/roomd-memory-retrieval/; (b) start local Letta server in docker; (c) run `make preregister`, git commit, optionally push to a public repo or OSF (the commit hash is the priority timestamp); (d) Vector begins ~4-6 weeks of daily roomd work under ROOMD_MEM_ARM env var randomization; (e) periodically run `make eval_corpus` to update results JSONL; (f) at N=120+ sessions, run final stats + Paper v1.0 build.",
+  "phase2_prerequisites": [
+    "git init in distillation/phd/ (or use the existing repo) and commit preregistration/v1.md",
+    "Letta server running (docker run -p 8283:8283 letta/letta:latest) for full coverage of Letta arm",
+    "OPENAI_API_KEY or ANTHROPIC_API_KEY exported for Cognee's cognify path",
+    "Install the skill: cp -r phd/code/injection/claude_code_skill ~/.claude/skills/roomd-memory-retrieval",
+    "phd_mem CLI for task recording (TBD: small thin wrapper around metrics.compute_session_metrics)"
+  ]
+}

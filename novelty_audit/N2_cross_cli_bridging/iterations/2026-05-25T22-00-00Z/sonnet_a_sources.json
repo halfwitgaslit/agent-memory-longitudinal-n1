@@ -1,0 +1,123 @@
+[
+  {
+    "id": "arxiv_2605.11032",
+    "title": "Portable Agent Memory: A Protocol for Cryptographically-Verified Memory Transfer Across Heterogeneous AI Agents",
+    "authors": ["Santhosh Kumar Ravindran"],
+    "venue": "arxiv preprint",
+    "date": "2026-05-10",
+    "url": "https://arxiv.org/abs/2605.11032",
+    "relevance": "CLOSEST_MISS",
+    "verdict_impact": "PARTIAL-OVERLAP — addresses cross-model memory portability via MCP but does NOT address CLI-specific storage schemas (Codex JSONL, Cursor SQLite, Cline JSON). Scope is GPT-4/Claude/Gemini model interop."
+  },
+  {
+    "id": "arxiv_2505.18279",
+    "title": "Collaborative Memory: Multi-User Memory Sharing in LLM Agents with Dynamic Access Control",
+    "venue": "arxiv preprint",
+    "date": "2025-05",
+    "url": "https://arxiv.org/abs/2505.18279",
+    "relevance": "LOW",
+    "verdict_impact": "Multi-user sharing within a single agent system. No cross-CLI, no schema bridging."
+  },
+  {
+    "id": "arxiv_2506.22815",
+    "title": "Memory as a Service (MaaS): Rethinking Contextual Memory as Service-Oriented Modules for Collaborative Agents",
+    "venue": "arxiv preprint",
+    "date": "2025-06",
+    "url": "https://arxiv.org/html/2506.22815v1",
+    "relevance": "LOW",
+    "verdict_impact": "MCP-based memory module concept. Mentions OpenMemory and MemOS. No CLI-specific format bridging."
+  },
+  {
+    "id": "arxiv_2603.10062",
+    "title": "Multi-Agent Memory from a Computer Architecture Perspective: Visions and Challenges Ahead",
+    "venue": "SIGARCH / arxiv",
+    "date": "2026-03",
+    "url": "https://arxiv.org/abs/2603.10062",
+    "relevance": "LOW",
+    "verdict_impact": "Conceptual framing of shared vs. distributed memory. Identifies cache sharing protocol as missing. No CLI specifics."
+  },
+  {
+    "id": "arxiv_2404.09982",
+    "title": "INMS: Memory Sharing for Large Language Model based Agents",
+    "venue": "arxiv preprint",
+    "date": "2024-04",
+    "url": "https://arxiv.org/abs/2404.09982",
+    "relevance": "LOW",
+    "verdict_impact": "Shared conversational memory pool for abstract multi-agent systems. No coding CLIs, no schema bridging."
+  },
+  {
+    "id": "arxiv_2507.10562",
+    "title": "SAMEP: A Secure Agent Memory Exchange Protocol for Persistent Context Sharing in Multi-Agent AI Systems",
+    "venue": "arxiv preprint",
+    "date": "2025-07",
+    "url": "https://arxiv.org/abs/2507.10562",
+    "relevance": "LOW",
+    "verdict_impact": "Security-focused memory exchange protocol with MCP/A2A interoperability. No CLI-specific schema bridging."
+  },
+  {
+    "id": "arxiv_2601.11595",
+    "title": "Enhancing Model Context Protocol (MCP) with Context-Aware Server Collaboration",
+    "venue": "arxiv preprint",
+    "date": "2026-01-22",
+    "url": "https://arxiv.org/abs/2601.11595",
+    "relevance": "LOW",
+    "verdict_impact": "Shared Context Store (SCS) for MCP servers. General multi-agent, not coding CLI-specific."
+  },
+  {
+    "id": "arxiv_2510.01285",
+    "title": "LLM-Based Multi-Agent Blackboard System for Information Discovery in Data Science",
+    "venue": "arxiv preprint",
+    "date": "2025-10",
+    "url": "https://arxiv.org/abs/2510.01285",
+    "relevance": "LOW",
+    "verdict_impact": "Blackboard architecture for homogeneous agent population in data science. No cross-CLI memory bridging."
+  },
+  {
+    "id": "arxiv_2505.02279",
+    "title": "A Survey of Agent Interoperability Protocols: MCP, ACP, A2A, and ANP",
+    "venue": "arxiv preprint",
+    "date": "2025-05",
+    "url": "https://arxiv.org/abs/2505.02279",
+    "relevance": "LOW",
+    "verdict_impact": "Protocol survey. Useful background. No memory bridging between coding CLIs."
+  },
+  {
+    "id": "github_memorix",
+    "title": "memorix: Open-source cross-agent memory layer for coding agents via MCP",
+    "authors": ["AVIDS2"],
+    "venue": "GitHub (grey literature)",
+    "date": "2025",
+    "url": "https://github.com/AVIDS2/memorix",
+    "relevance": "HIGH_GREY",
+    "verdict_impact": "Implements the exact claim for Cursor, Claude Code, Codex, Windsurf, Gemini CLI, GitHub Copilot, Kiro, etc. Not peer-reviewed. Potential prior art in IP sense."
+  },
+  {
+    "id": "github_memory_bridge",
+    "title": "memory-bridge: Two-way memory sync between AI coding agents",
+    "authors": ["Bbasche"],
+    "venue": "GitHub (grey literature)",
+    "date": "2025-2026",
+    "url": "https://github.com/bbasche/memory-bridge",
+    "relevance": "HIGH_GREY",
+    "verdict_impact": "Implements cross-CLI bridging for Claude Code and Codex with format adapters. Not peer-reviewed."
+  },
+  {
+    "id": "github_agentmemory",
+    "title": "agentmemory: Persistent memory for Claude Code, Codex, Cursor, Gemini CLI",
+    "authors": ["rohitg00"],
+    "venue": "GitHub (grey literature)",
+    "date": "2025-2026",
+    "url": "https://github.com/rohitg00/agentmemory",
+    "relevance": "HIGH_GREY",
+    "verdict_impact": "Persistent cross-CLI memory with hybrid search. Not peer-reviewed."
+  },
+  {
+    "id": "blog_coding_ai_sync",
+    "title": "Keeping Claude Code, Codex, and Cursor memory in sync",
+    "venue": "coding-with-ai.dev (grey literature)",
+    "date": "2025-2026",
+    "url": "https://coding-with-ai.dev/posts/sync-claude-code-codex-cursor-memory/",
+    "relevance": "MEDIUM_GREY",
+    "verdict_impact": "Practitioner post describing the exact problem and Unix-style solutions. No academic grounding."
+  }
+]

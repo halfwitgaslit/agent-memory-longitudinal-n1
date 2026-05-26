@@ -1,0 +1,106 @@
+{
+  "researcher": "sonnet_b",
+  "lane": "industry_oss",
+  "claim": "N1_longitudinal_n1_agent_memory_deployment",
+  "audit_date": "2026-05-25",
+  "verdict": "PARTIAL-OVERLAP",
+  "verdict_rationale": "Daniel Miessler's PAI is a near-kill: n=1, ~2-year longitudinal personal deployment with published behavioral reflection, 3,540 signals, 84 failure-event analysis, versioned algorithm, conference talk at [un]prompted 2026. This is a practitioner parallel, not academic study. Claim survives if it requires (a) named framework (Mem0/Letta/etc.), (b) prospective study design with defined outcomes, or (c) peer-reviewed publication. The deployment practice itself is not novel — the academic framing may be.",
+  "sources": [
+    {
+      "rank": 1,
+      "title": "Daniel Miessler — Building Your Own Personal AI Infrastructure",
+      "url": "https://danielmiessler.com/blog/personal-ai-infrastructure",
+      "date": "2025-07-26",
+      "type": "practitioner_blog",
+      "similarity": "HIGHEST — n=1, longitudinal ~2yr, custom 3-tier memory, 3540 signals, failure analysis, behavioral steering rules, conference talk",
+      "difference": "Custom architecture not named framework; blog not academic paper; eventually expanded to multi-person"
+    },
+    {
+      "rank": 2,
+      "title": "The Algorithmic Self-Portrait: Deconstructing Memory in ChatGPT",
+      "url": "https://arxiv.org/abs/2602.01450",
+      "date": "2026-02-01",
+      "type": "academic_paper",
+      "similarity": "HIGH — real-world ChatGPT memory data from 80 users; analysis of what system learned about them; GDPR data donations",
+      "difference": "n=80 not n=1; retrospective analysis; not self-deployment study"
+    },
+    {
+      "rank": 3,
+      "title": "Letta Discord support agent (months of learning)",
+      "url": "https://www.letta.com/blog/our-next-phase",
+      "date": "2024",
+      "type": "vendor_blog",
+      "similarity": "MEDIUM — explicitly longitudinal (~1 month learning), real deployment",
+      "difference": "Vendor-run bot not personal self-study; no user-side behavioral analysis published"
+    },
+    {
+      "rank": 4,
+      "title": "CloneMem: Benchmarking Long-Term Memory for AI Clones",
+      "url": "https://arxiv.org/pdf/2601.07023",
+      "date": "2026-01",
+      "type": "academic_paper",
+      "similarity": "MEDIUM — 1-3 year personal digital traces (diaries, email, social media) used for longitudinal coherence",
+      "difference": "Synthetic/reconstructed data not live deployment; benchmark not study"
+    },
+    {
+      "rank": 5,
+      "title": "Cognitive Revolution podcast — Miessler PAI deep-dive",
+      "url": "https://www.cognitiverevolution.ai/pioneering-pai-how-daniel-miessler-s-personal-ai-infrastructure-activates-human-agency-creativity/",
+      "date": "2025-2026",
+      "type": "podcast_interview",
+      "similarity": "MEDIUM — corroborates Miessler longitudinal n=1 deployment; widely distributed",
+      "difference": "Podcast not academic study; no data tables"
+    },
+    {
+      "rank": 6,
+      "title": "Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory",
+      "url": "https://arxiv.org/abs/2504.19413",
+      "date": "2025-04",
+      "type": "academic_paper",
+      "similarity": "MEDIUM — production deployment with longitudinal personalization; real user data",
+      "difference": "Vendor-authored; no individual n=1 user study; no user behavioral analysis"
+    },
+    {
+      "rank": 7,
+      "title": "MultiSessionCollab: Learning User Preferences with Memory",
+      "url": "https://arxiv.org/pdf/2601.02702",
+      "date": "2026-01",
+      "type": "academic_paper",
+      "similarity": "MEDIUM — 19-participant user study, 3 sessions, memory improves personalization",
+      "difference": "n=19 not n=1; only 3 sessions not longitudinal; researcher-designed tasks"
+    },
+    {
+      "rank": 8,
+      "title": "ByteRover: Agent-Native Memory Through LLM-Curated Hierarchical Context",
+      "url": "https://arxiv.org/html/2604.01599v1",
+      "date": "2026-04",
+      "type": "academic_paper",
+      "similarity": "LOW-MEDIUM — production memory system; LoCoMo 92.2%; developer-focused",
+      "difference": "System paper not user study; no n=1 personal deployment described"
+    },
+    {
+      "rank": 9,
+      "title": "mnemos-os/mnemos — Production-grade memory OS in use since Dec 2025",
+      "url": "https://github.com/mnemos-os/mnemos",
+      "date": "2025-12",
+      "type": "github_repo",
+      "similarity": "LOW — production use since Dec 2025; longitudinal implied",
+      "difference": "No published behavioral data; no individual n=1 study; enterprise-oriented"
+    },
+    {
+      "rank": 10,
+      "title": "HN: An experiment in separating identity, memory, and tools",
+      "url": "https://news.ycombinator.com/item?id=46398323",
+      "date": "~2025",
+      "type": "hacker_news",
+      "similarity": "LOW-MEDIUM — title suggests personal experimentation with agent memory architecture",
+      "difference": "Content inaccessible (rate-limited); duration and scope unknown"
+    }
+  ],
+  "key_gaps": [
+    "Discord/Slack community archives not indexed — Letta/Mem0 Discord likely contains solo dev longitudinal threads",
+    "Enterprise memory deployments (Copilot, Salesforce) are n=1 per user but entirely unpublished",
+    "HN item 46398323 inaccessible — potential high-similarity hit",
+    "Miessler's PAI is the dominant practitioner parallel; claim's survival depends on academic framing requirement"
+  ]
+}
