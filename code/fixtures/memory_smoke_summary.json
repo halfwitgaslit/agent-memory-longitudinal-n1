@@ -35,14 +35,14 @@
       "error_message": null,
       "embedding_model": "none",
       "n_memories": 0,
-      "cumulative_latency_ms": 0.00095367431640625,
+      "cumulative_latency_ms": 0.0011920928955078125,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 8.020238876342773,
+      "uptime_s": 7.6670567989349365,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -93,7 +93,7 @@
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 8.020392179489136,
+      "uptime_s": 7.667203903198242,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -110,25 +110,25 @@
       "embedding_model": "BAAI/bge-small-en-v1.5"
     },
     "status": "OK",
-    "n_adds_executed": 3,
+    "n_adds_executed": 2,
     "search_results": [
       {
         "query": "Which Python version do we target?",
         "n_results": 3,
-        "top_score": 0.8556801059546547,
-        "top_text_snippet": "The roomd project targets Python version 3.13"
+        "top_score": 0.7822167561256032,
+        "top_text_snippet": "The roomd project targets Python 3.13 as the Python version"
       },
       {
         "query": "How do we generate stable IDs?",
         "n_results": 3,
-        "top_score": 0.7230130079308821,
-        "top_text_snippet": "The roomd project uses sha1 truncated to 16 hex characters of the canonical content as the convention for ID generation"
+        "top_score": 0.609655547891133,
+        "top_text_snippet": "The user's project uses sha1[:16] (SHA1 hash truncated to 16 hex characters) as the preferred convention for ID generati"
       },
       {
         "query": "What's our convention for git worktrees?",
         "n_results": 3,
-        "top_score": 0.7847516618341235,
-        "top_text_snippet": "The roomd project uses git worktrees extensively, with each worktree treated as an isolated branch for development"
+        "top_score": 0.6642810732188233,
+        "top_text_snippet": "The roomd project uses git worktrees extensively, with each worktree treated as an isolated branch"
       }
     ],
     "health_post": {
@@ -136,24 +136,26 @@
       "healthy": true,
       "error_message": null,
       "embedding_model": "BAAI/bge-small-en-v1.5",
-      "n_memories": 6,
-      "cumulative_latency_ms": 45022.48954772949,
+      "n_memories": 4,
+      "cumulative_latency_ms": 46953.479528427124,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 53.045000076293945,
+      "uptime_s": 54.62363290786743,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
       },
       "extra": {
         "collection": "phd_cd153d69287af192",
-        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-22/memory_smoke0/mem0_qdrant",
+        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-23/memory_smoke0/mem0_qdrant",
         "llm_provider": "claude_cli",
-        "llm_model": "claude-haiku-4-5"
+        "llm_model": "claude-haiku-4-5",
+        "last_zero_extract_on_substantive_ts": 1779799150.072602,
+        "n_zero_extract_on_substantive": 1
       }
     }
   },
@@ -200,7 +202,7 @@
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 53.13360381126404,
+      "uptime_s": 54.71162223815918,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -249,14 +251,14 @@
       "error_message": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
       "embedding_model": "BAAI/bge-small-en-v1.5",
       "n_memories": 0,
-      "cumulative_latency_ms": 56.70905113220215,
+      "cumulative_latency_ms": 302.05297470092773,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 7,
       "last_error": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
-      "last_error_ts_utc": 1779798664.3062458,
+      "last_error_ts_utc": 1779799186.608908,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 52.9907431602478,
+      "uptime_s": 54.82340717315674,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -303,14 +305,14 @@
       "error_message": null,
       "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
       "n_memories": 3,
-      "cumulative_latency_ms": 0.048160552978515625,
+      "cumulative_latency_ms": 0.03504753112792969,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 49.845422983169556,
+      "uptime_s": 51.651652812957764,
       "scope": {
         "user_id": "vector",
         "project": "roomd"

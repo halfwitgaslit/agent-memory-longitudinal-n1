@@ -138,3 +138,34 @@ m1 correctly excluded (no durable tag AND support_count=1 < threshold 3).
 
 Evidence: `decisions/loop2_evidence/d6_pddc_gcmp_report.json`
 
+
+## 2026-05-26T09:25:00Z — D7 VALIDATED
+
+6 edge cases tested against all backends; all pass HONEST-Mem invariants:
+
+| # | Case | Expected | Actual | Pass? |
+|---|---|---|---|---|
+| 1 | empty turn list (null, random, mem0) | n_errors=0, healthy=True | n_errors=0, healthy=True | ✓ |
+| 2 | whitespace-only turns | n_errors=0, n_silent_extraction_failures=0 | matches | ✓ |
+| 3 | substantive + bogus anthropic api_key | healthy=False, n_errors≥1, last_error populated | healthy=False, n_errors=1, "LLM extraction failed: Error code: 401..." | ✓ |
+| 4 | substantive + working claude_cli | ids≥1, healthy=True | ids=2, n_memories=2, n_errors=0, healthy=True | ✓ |
+| 5 | search on empty partition | n_results=0, n_errors=0 | n_results=0, n_errors=0 | ✓ |
+| 6 | inspect() across all backends | never returns -1 | null=0, random=0, mem0=0, letta=0 (all ok) | ✓ |
+
+Additional silent failures fixed during D7:
+
+C. **Mem0 migrations qdrant shared lock.** Mem0 opens a global qdrant at
+   ~/.mem0/migrations_qdrant which is exclusive-locked. Only ONE
+   Mem0Backend instance can be alive per process. Documented this in
+   `mem0_backend.py` module docstring as a "KNOWN ISSUE" so Phase 2 eval
+   loop knows to keep one long-lived instance per arm.
+   This is a constraint of the mem0ai library, not our code.
+
+Added 2 new pytest invariant tests:
+- `test_inspect_post_record_error_propagates`
+- `test_mem0_silent_failure_signals_extended` (regression guard — ensures
+   the 4 known mem0 silent-failure signals stay in the detection set)
+
+Evidence: `decisions/loop2_evidence/d7_silent_failure_hunt_report.json`
+Tests: 75 → 77/77 still pass.
+

@@ -4,9 +4,19 @@ Configuration (pre-registered in architecture/v1.md §4.2):
 - vector_store: qdrant on disk under <store_dir>/qdrant
 - embedder:     fastembed (BAAI/bge-small-en-v1.5, 384-d)
 - llm:          Anthropic Haiku for fact extraction (claude-3-5-haiku-latest)
-                billed against subscription via ANTHROPIC_API_KEY if set; otherwise
-                we set a placeholder and only the embedding path actually runs
-                during smoke tests.
+                routed through `claude -p` subscription billing if no real
+                ANTHROPIC_API_KEY is present (see memory/claude_cli_llm.py).
+
+KNOWN ISSUE (discovered in Loop 2 D7): Mem0 opens a SHARED global qdrant
+at ~/.mem0/migrations_qdrant which is exclusive-locked. Only ONE
+Mem0Backend instance can be alive per process at a time. If you need to
+construct multiple instances:
+  - Close each backend (close its vector_store client) before instantiating the next
+  - OR run each in its own subprocess
+  - OR wipe ~/.mem0/migrations_qdrant between instances (race-prone)
+
+This is a constraint of the mem0ai library, not our code. Phase 2 eval
+loop will keep one long-lived Mem0Backend instance per arm.
 
 Mem0 v2 surface:
 - m.add(messages, user_id, ...) → list of {id, memory, event, ...}

@@ -1,0 +1,94 @@
+{
+  "started_utc": 1779799031.04837,
+  "case_1_empty_turns": {
+    "null": {
+      "ids": [],
+      "n_memories": 0,
+      "n_errors": 0,
+      "healthy": true
+    },
+    "random": {
+      "ids": [],
+      "n_memories": 0,
+      "n_errors": 0,
+      "healthy": true
+    },
+    "mem0": {
+      "ids": [],
+      "n_memories": 0,
+      "n_errors": 0,
+      "healthy": true
+    }
+  },
+  "case_2_whitespace_turns": {
+    "mem0": {
+      "ids": [],
+      "n_memories": 0,
+      "n_errors": 0,
+      "healthy": true,
+      "n_silent_extraction_failures": 0
+    }
+  },
+  "case_3_substantive_bogus_provider": {
+    "mem0_bogus_anthropic": {
+      "ids": [],
+      "n_memories": 0,
+      "n_errors": 1,
+      "healthy": false,
+      "last_error_first200": "mem0.add: silent LLM extraction failure (mem0 swallowed error). captured: LLM extraction failed: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api",
+      "n_silent_extraction_failures": 1
+    }
+  },
+  "case_4_substantive_claude_cli": {
+    "mem0_working": {
+      "ids": [
+        "ad246785-938f-4984-a4b7-d6b79915cf3b",
+        "f2c5f8a2-599a-4bde-af5f-efc3fb61ebcb"
+      ],
+      "ids_count": 2,
+      "n_memories": 2,
+      "n_errors": 0,
+      "healthy": true
+    }
+  },
+  "case_5_search_empty": {
+    "mem0_empty_search": {
+      "n_results": 0,
+      "n_memories": 0,
+      "n_errors": 0,
+      "healthy": true
+    }
+  },
+  "case_6_no_sentinel_leak": {
+    "findings": [
+      {
+        "backend": "null",
+        "stage": "init",
+        "n_memories": 0,
+        "ok": true
+      },
+      {
+        "backend": "random",
+        "stage": "init",
+        "n_memories": 0,
+        "ok": true
+      },
+      {
+        "backend": "mem0",
+        "stage": "init",
+        "n_memories": 0,
+        "ok": true
+      },
+      {
+        "backend": "letta",
+        "stage": "init",
+        "n_memories": 0,
+        "ok": true
+      }
+    ],
+    "all_ok": true
+  },
+  "failures": [],
+  "status": "PASS",
+  "ended_utc": 1779799059.127958
+}

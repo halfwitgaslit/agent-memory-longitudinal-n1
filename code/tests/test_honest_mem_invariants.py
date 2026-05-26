@@ -129,5 +129,36 @@ def test_record_error_non_silent():
     assert b._health.healthy is False
 
 
+def test_inspect_post_record_error_propagates():
+    """inspect() after _record_error must show the same error fields."""
+    b = NullBackend()
+    b._record_error("api.search", "transport failure", silent_extraction=False)
+    insp = b.inspect()
+    assert insp["n_errors"] == 1
+    assert insp["healthy"] is False
+    assert insp["last_error"] == "api.search: transport failure"
+    assert insp["last_error_ts_utc"] > 0
+    assert insp["n_silent_extraction_failures"] == 0
+
+
+def test_mem0_silent_failure_signals_extended():
+    """The Mem0 silent-failure detector must check all known mem0 error signals.
+
+    These were discovered during Loop 2 D5 (markdown-table response edge case)
+    and D7 (proactive hunt). Any regression that drops a signal here means a
+    new silent failure mode could be reintroduced.
+    """
+    import inspect as ins
+    from memory.mem0_backend import Mem0Backend
+    src = ins.getsource(Mem0Backend.add)
+    for signal in (
+        "LLM extraction failed",
+        "Could not resolve authentication",
+        "Error parsing extraction response",
+        "Expecting value",
+    ):
+        assert signal in src, f"Mem0Backend.add() does not check for {signal!r}"
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-v"]))
