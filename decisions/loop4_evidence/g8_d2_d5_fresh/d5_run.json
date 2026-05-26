@@ -1,0 +1,7 @@
+{
+  "script": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd/code/scripts/d5_cross_cli_bridging.py",
+  "rc": 0,
+  "stdout": "Parsed Codex rollout: session.cli='codex' n_turns=62 cwd=/Users/aiSandbox/.codex/worktrees/113f/roomd\n  picked 5 substantive turns for ingest\ncodex uid:        phd_088a9f012a955307\nclaude_code uid:  phd_a0e8367916906e6d\nbridge uid (no cli): phd_a07d5722b5a339f9\nStage 2: pre-ingest count for bridge_uid = 0\n  \u2192 ingested 4 memory ids in 34.6s\n  query='What dependency drift did we find?': 4 results, top_score=0.482\n  query='roomd': 4 results, top_score=0.317\n  query='What zod version is being used?': 4 results, top_score=0.437\n  query='automation': 4 results, top_score=0.362\n\nWalled check (cli='claude_code' included in scope):\n  walled uid: phd_a0e8367916906e6d\n  memories visible: 0 (expected: 0)\n  search results: 0 (expected: 0)\n\nReport: /Users/aiSandbox/github/claude_can_do_anything/distillation/phd/decisions/loop2_evidence/d5_cross_cli_bridging_report.json\nD5 PASS\n",
+  "stderr": "",
+  "duration_s": 36.89
+}

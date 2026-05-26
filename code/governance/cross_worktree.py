@@ -14,9 +14,12 @@ does NOT ship is the *policy layer* for:
    get promoted to the parent branch?)
 
 GCMP provides exactly these three policy primitives, composed atop ANY
-MemoryBackend implementing the base ABC. The policies are expressed as small
-dataclasses (no DSL parsing) with default values calibrated against the roomd
-corpus.
+MemoryBackend implementing the base ABC. The policies are expressed as
+small dataclasses (no DSL parsing) with hand-tuned default values; Phase 2
+deployment will collect promotion-event logs and use them to actually
+calibrate. The Loop-3 audit caught a previous "calibrated against the
+roomd corpus" claim as untruthful — no calibration code existed — so the
+docstring now says DEFAULTS instead.
 
 USAGE:
     backend = Mem0Backend(...)
@@ -138,9 +141,20 @@ class PromotionPolicy:
     require_explicit_review: bool = False
 
     def is_eligible(self, m: Memory) -> bool:
+        # G3 Loop 4 fix:
+        # Old: denom = max(1, m.hit_count + m.support_count) — conflated two
+        # distinct counters. support_count = how many sessions referenced the
+        # memory at all (the "exposure" denominator); hit_count = how many
+        # searches usefully returned it. Adding them inflated the denominator
+        # so min_hit_rate=0.7 was effectively requiring hit_count > 2.33 ×
+        # support_count, way harder than intended.
+        #
+        # Correct: hit_rate = hit_count / support_count, treating support_count
+        # as the universe of opportunities. With the max(1, ...) guard for
+        # the support_count=0 case (returns 0 hit_rate -> rejected).
         if m.support_count < self.min_support_count:
             return False
-        denom = max(1, m.hit_count + m.support_count)
+        denom = max(1, m.support_count)
         hit_rate = m.hit_count / denom
         if hit_rate < self.min_hit_rate:
             return False
@@ -155,7 +169,13 @@ class PromotionPolicy:
         return True
 
 
-# Default policies, calibrated against the roomd corpus (per architecture/v1.md §4.4)
+# Default policies.
+#
+# G3 Loop 4 truthful update: these values are hand-tuned defaults chosen
+# by inspection. Phase 2 deployment will collect promotion-event logs and
+# fit thresholds against them. Until then we honestly label them as
+# DEFAULTS rather than claiming they are tuned to any specific corpus.
+# (The prior "calibrated" wording was caught by the Loop 3 audit.)
 DEFAULT_INHERITANCE_POLICY = InheritancePolicy()
 DEFAULT_CROSS_QUERY_POLICY = CrossQueryPolicy()
 DEFAULT_PROMOTION_POLICY = PromotionPolicy()
@@ -179,6 +199,12 @@ class WorktreeMemoryView:
     parent_branch: Optional[str] = None
     user_id: Optional[str] = None
     project: Optional[str] = None
+    # G3 Loop 4: durable storage for inherited-memory IDs (was previously
+    # written to inspect().get("extra", {})["_pending_inheritance"] which
+    # was a throwaway dict each call). This list survives across calls.
+    inherited_memory_ids: List[str] = field(default_factory=list)
+    inherited_from: Optional[str] = None
+    fork_ts_utc: Optional[float] = None
 
     def scope_dict(self) -> Dict[str, Any]:
         return {
@@ -198,6 +224,9 @@ class WorktreeMemoryView:
     def inspect(self) -> Dict[str, Any]:
         out = dict(self.backend.inspect())
         out["worktree_view_scope"] = self.scope_dict()
+        out["inherited_memory_ids"] = list(self.inherited_memory_ids)
+        out["inherited_from"] = self.inherited_from
+        out["fork_ts_utc"] = self.fork_ts_utc
         return out
 
 
@@ -252,11 +281,15 @@ class GCMPManager:
             m.metadata = dict(m.metadata or {})
             m.metadata["inherited_from"] = ctx.parent_worktree
             m.metadata["inherited_at_utc"] = ctx.fork_ts_utc
-        # We don't have a generic "add_memory_object" API; in Phase 2 we'll add
-        # one. For now, we attach to the view's metadata for replay.
-        child_view.backend.inspect().get("extra", {})["_pending_inheritance"] = [
-            m.memory_id for m in inherited
-        ]
+        # G3 Loop 4: persist inherited IDs durably on the child_view (the
+        # WorktreeMemoryView dataclass now has an `inherited_memory_ids`
+        # field). Previously we wrote them to inspect()["extra"], which
+        # rebuilt a throwaway dict on every call — the IDs were lost
+        # immediately. Now `child_view.inspect()["inherited_memory_ids"]`
+        # surfaces them durably across calls.
+        child_view.inherited_memory_ids = [m.memory_id for m in inherited]
+        child_view.inherited_from = ctx.parent_worktree
+        child_view.fork_ts_utc = ctx.fork_ts_utc
         self.register_worktree(new_worktree_id, parent_view.worktree_id)
         return child_view
 

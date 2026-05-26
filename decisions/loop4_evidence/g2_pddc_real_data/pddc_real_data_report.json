@@ -1,0 +1,46 @@
+{
+  "data_source": "REAL roomd compaction summaries from ~/.claude/projects/-Users-aiSandbox-github-roomd*",
+  "n_compaction_records_main": 8,
+  "n_compaction_records_worktrees": 14,
+  "n_total_compaction_records": 22,
+  "split": {
+    "n_train": 15,
+    "n_eval": 7,
+    "seed": 42,
+    "policy": "pre-reg PDDC_calibration_split 70/30"
+  },
+  "signal_distribution": {
+    "n_trajectories": 22,
+    "avg_support_count": 167.3181818181818,
+    "var_support_count": 7803.216942148758,
+    "avg_hit_rate": 0.2718200998747618,
+    "var_hit_rate": 0.008463848555972568,
+    "avg_conflict_events": 61.5,
+    "var_conflict_events": 1148.7954545454545,
+    "avg_task_success_delta": 0.08775077298929145,
+    "var_task_success_delta": 0.009391799925921415,
+    "hit_rate_unique_values": 21,
+    "zero_support_fraction": 0.0,
+    "signal_degeneracy_warning": true
+  },
+  "baseline_fsrs6_train_loss": 0.010532030410689798,
+  "baseline_fsrs6_eval_loss": 0.01316193392754452,
+  "pddc_train_loss": 0.003911176329942441,
+  "pddc_eval_loss": 0.004365060003177984,
+  "train_improvement_pct": 62.86398559984525,
+  "eval_improvement_pct": 66.83572469511456,
+  "fit_success": true,
+  "fit_n_iters": 19,
+  "h2_naive_pass": true,
+  "signal_weight_sign_matches": {
+    "w_hit": true,
+    "w_support": false,
+    "w_conflict": true,
+    "w_task_delta": true,
+    "bias": false
+  },
+  "n_sign_matches": 3,
+  "h2_signal_quality_caveat": "Signals were built from a KEYWORD-OVERLAP HEURISTIC on the same compaction-summary text and later turns of the SAME session. This is NOT a genuine usage-trace signal \u2014 it conflates the 'memory recall' question with 'did the model use any keywords from the summary in later turns'. Hit-rate variance is 0.0085. With low signal variance, even modest calibration improvements may be trivial regressions of the bias term, not genuine PDDC value.",
+  "h2_phase_2_plan": "True H2 testing requires real usage signals captured during Phase 2 deployment: actual subsequent-session memory-retrieval events with measured task-success outcomes. The pre-registered n_target_sessions_total=120 over 4 time-of-day buckets is designed for exactly this.",
+  "h2_loop4_verdict": "DIRECTIONAL ONLY. PDDC's eval-loss improvement on keyword-heuristic signals does not constitute publication-grade H2 evidence. Loop 4 does NOT claim H2 settled."
+}

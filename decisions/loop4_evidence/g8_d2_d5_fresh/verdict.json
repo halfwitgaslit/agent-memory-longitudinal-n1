@@ -1,0 +1,19 @@
+{
+  "d2_ingest": {
+    "skipped_idempotent": false,
+    "n_ids_returned": 3,
+    "post_n_memories": 3,
+    "cli_meter_total_calls": 1,
+    "fresh_capture_criteria_met": true
+  },
+  "d5_ingest": {
+    "skipped_idempotent": false,
+    "new_ids_count": 4,
+    "pre_count": 0,
+    "post_count": 4,
+    "final_cli_meter_total_calls": 1,
+    "final_cli_meter_total_usd": 0.0567,
+    "fresh_capture_criteria_met": true
+  },
+  "g8_pass": true
+}

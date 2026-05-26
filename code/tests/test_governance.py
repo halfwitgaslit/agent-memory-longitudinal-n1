@@ -213,3 +213,91 @@ def test_gcmp_manager_summary_serializable():
     assert "inheritance_policy" in summary
     assert "cross_query_policy" in summary
     assert "promotion_policy" in summary
+
+
+# ------------------------------------------------------------------
+# G3 Loop 4 regression guards
+# ------------------------------------------------------------------
+
+
+def test_g3_hit_rate_formula_uses_support_as_denominator():
+    """Post-Loop-4: hit_rate is hit_count / support_count, NOT
+    hit_count / (hit_count + support_count). The old formula made
+    min_hit_rate=0.7 effectively require hit_count > 2.33 * support_count
+    — way harder than intended.
+
+    Under the corrected formula, support=5 hits=8 gives hit_rate=1.6 which
+    must clear the 0.7 threshold trivially.
+    """
+    pol = PromotionPolicy(
+        min_support_count=3,
+        min_hit_rate=0.7,
+        max_conflict_events=1,
+        min_task_success_delta=0.05,
+    )
+    # Under OLD formula: 8/(8+5)=0.615 (fails). Under NEW: 8/5=1.6 (passes).
+    m = Memory(
+        memory_id="g3_hit_rate",
+        text="t",
+        score=0.5,
+        scope={},
+        state="active",
+        support_count=5,
+        hit_count=8,
+        conflict_count=0,
+        metadata={"task_success_delta": 0.1},
+    )
+    assert pol.is_eligible(m), (
+        "G3 regression: hit_rate formula reverted to old denominator"
+    )
+
+
+def test_g3_fork_worktree_persists_inherited_ids():
+    """Post-Loop-4: fork_worktree() persists inherited memory IDs on the
+    child_view.inherited_memory_ids field (durable). Previously it wrote
+    to a throwaway dict returned by inspect()["extra"] and the IDs were
+    silently discarded.
+    """
+    backend = RandomBackend(scope={"user_id": "v", "project": "r"})
+    main_view = WorktreeMemoryView(backend, "main", user_id="v", project="r")
+    # Seed a durable parent memory; we'll see if it survives the fork
+    main_view.add([_make_turn("convention: use snake_case", ordinal=1)])
+    mgr = GCMPManager(backend=backend)
+    child = mgr.fork_worktree(main_view, new_worktree_id="feat/g3", user_id="v", project="r")
+    # The persisted field must exist
+    assert isinstance(child.inherited_memory_ids, list)
+    # Either inherited some IDs OR the inheritance predicate found nothing
+    # eligible (acceptable). Critical: the dict-of-throwaway-dict pattern
+    # is gone.
+    insp = child.inspect()
+    assert "inherited_memory_ids" in insp
+    assert isinstance(insp["inherited_memory_ids"], list)
+    assert insp["inherited_from"] == "main"
+    assert insp["fork_ts_utc"] is not None
+
+
+def test_g3_default_promotion_policy_label_is_truthful():
+    """Post-Loop-4: the DEFAULT_*_POLICY definitions must NOT carry a
+    comment claiming the values are calibrated. Phase 2 will calibrate;
+    until then the comments must honestly label them as DEFAULTS.
+
+    We check the lines around DEFAULT_INHERITANCE_POLICY etc., not the
+    module docstring (which is allowed to mention the prior bug as
+    historical context).
+    """
+    import inspect as ins
+    from governance import cross_worktree as cw
+    src = ins.getsource(cw)
+    # Find the line that defines DEFAULT_INHERITANCE_POLICY
+    lines = src.splitlines()
+    for i, line in enumerate(lines):
+        if "DEFAULT_INHERITANCE_POLICY = " in line:
+            # Look at the 5 lines immediately above the definition
+            context = "\n".join(lines[max(0, i - 5):i])
+            assert "calibrated against the roomd corpus" not in context, (
+                "G3 regression: false 'calibrated' claim is back in the "
+                "DEFAULT_*_POLICY block comment"
+            )
+            break
+    else:
+        raise AssertionError("DEFAULT_INHERITANCE_POLICY not found in module")

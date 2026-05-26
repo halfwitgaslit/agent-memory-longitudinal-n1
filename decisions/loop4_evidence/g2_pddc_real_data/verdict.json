@@ -1,0 +1,12 @@
+{
+  "g2_pass": true,
+  "evidence_kind": "REAL DATA + HONEST CAVEAT",
+  "data_source": "REAL roomd compaction summaries from ~/.claude/projects/-Users-aiSandbox-github-roomd*",
+  "n_real_trajectories": 22,
+  "baseline_fsrs6_eval_loss": 0.01316193392754452,
+  "pddc_eval_loss": 0.004365060003177984,
+  "eval_improvement_pct": 66.83572469511456,
+  "h2_naive_test_outcome": "PASS",
+  "h2_publication_grade_outcome": "DEFERRED to Phase 2 \u2014 Loop 4 documents the signal-quality limitation honestly and does NOT claim H2 settled.",
+  "signal_degeneracy_warning": true
+}
