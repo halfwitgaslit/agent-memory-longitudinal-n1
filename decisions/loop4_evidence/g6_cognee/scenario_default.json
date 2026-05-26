@@ -1,0 +1,16 @@
+{
+  "scenario": "default",
+  "api_key_real": false,
+  "status": "INGEST-FAILED",
+  "add_ids": [],
+  "inspect_post_add": {
+    "healthy": false,
+    "n_memories": 0,
+    "n_errors": 2,
+    "last_error": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
+    "last_cognify_error": null
+  },
+  "n_search_results": 0,
+  "n_with_sentinel": 0,
+  "sentinel_snippet": null
+}

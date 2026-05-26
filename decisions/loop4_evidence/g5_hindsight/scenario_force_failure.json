@@ -1,0 +1,20 @@
+{
+  "scenario": "force_failure",
+  "init_health": {
+    "healthy": true,
+    "error_message": null
+  },
+  "post": {
+    "healthy": false,
+    "n_errors": 2,
+    "last_error": "hindsight.add: ensure_bank returned None: RuntimeError: Database migration failed"
+  },
+  "add_ids": [],
+  "invariants": {
+    "healthy_after_failure_is_False_or_init_unhealthy": true,
+    "n_errors_gt_zero_or_init_unhealthy": true,
+    "last_error_populated_or_init_unhealthy": true,
+    "no_ids_returned": true
+  },
+  "all_invariants_pass": true
+}

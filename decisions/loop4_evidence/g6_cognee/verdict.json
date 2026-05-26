@@ -1,0 +1,11 @@
+{
+  "g6_pass": true,
+  "default_status": "INGEST-FAILED",
+  "honest_mem_verdict": "HONEST-FAILURE",
+  "invariants": {
+    "healthy_after_failure_is_False": true,
+    "some_error_surfaced": true,
+    "no_silent_success": true
+  },
+  "operational_note": "When ANTHROPIC_API_KEY is absent, Cognee's LLM-extraction path fails. Phase 2 must either set a real API key or accept Cognee as a SKIPPED-UNHEALTHY arm (degradation strategy from architecture/v1.md \u00a74.2)."
+}

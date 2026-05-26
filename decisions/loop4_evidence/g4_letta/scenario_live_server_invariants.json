@@ -1,0 +1,13 @@
+{
+  "post_status": "FAILURE_BUT_HONEST",
+  "healthy_post_add": false,
+  "n_errors_post_add": 2,
+  "last_error": "letta.add: InternalServerError: Error code: 500 - {'detail': 'An unknown error occurred'}",
+  "honest_mem_invariants_satisfied": true,
+  "invariants_breakdown": {
+    "healthy_after_failure_is_False": true,
+    "n_errors_gt_zero": true,
+    "last_error_populated": true,
+    "agent_model_discovered": true
+  }
+}

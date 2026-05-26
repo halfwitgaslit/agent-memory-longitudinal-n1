@@ -1,0 +1,17 @@
+{
+  "scenario": "live_server",
+  "status": "FAILED",
+  "add_ids": [],
+  "inspect_post_add": {
+    "healthy": false,
+    "n_memories": 0,
+    "n_errors": 2,
+    "last_error": "letta.add: InternalServerError: Error code: 500 - {'detail': 'An unknown error occurred'}",
+    "embedding_model": "letta-default",
+    "agent_model": "letta/letta-free",
+    "agent_embedding": "letta/letta-free"
+  },
+  "n_search_results": 0,
+  "n_with_sentinel": 0,
+  "sentinel_text_snippet": null
+}

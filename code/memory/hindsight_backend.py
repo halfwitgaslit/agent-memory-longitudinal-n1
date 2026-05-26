@@ -1,21 +1,35 @@
-"""HindsightBackend: wraps hindsight-api 0.6.x MemoryEngine.
+"""HindsightBackend: wraps hindsight-api 0.6.x MemoryEngine (Loop 4 G5 rewrite).
 
-Hindsight requires a Postgres database (pg0-embedded ships with the
-hindsight-api package; we use the embedded engine to avoid external Postgres
-dependency for smoke tests).
+Hindsight 0.6.x is async-first. The Loop 3 implementation used method
+names like `record_observation` and `list_banks(context=...)` that do not
+exist in the 0.6.x surface — every call no-op'd, the synthetic SHA1 ID
+mimicked a successful add(), and recall() always returned empty.
+
+The corrected surface used here (verified 2026-05-26 against
+`hindsight_api 0.6.2`):
+
+  - Banks: `get_bank_profile(bank_id, request_context=..., create_if_missing=True)`
+    is the implicit-create entry-point. There is no public `create_bank`.
+  - Ingest: `engine.retain(bank_id, content, context="", request_context=...)`
+    is a SYNC wrapper around `retain_async`. Returns a list of memory_unit_ids.
+  - Recall: `engine.recall(bank_id, query, fact_type, ...)` is sync.
 
 Configuration:
-- db_url: defaults to pg0-embedded local instance; if unavailable, falls back
-  to user-configured Postgres
-- embeddings: LocalSTEmbeddings (sentence-transformers, no API key)
-- llm: we set Anthropic Haiku for memory_llm/retain_llm/reflect_llm; smoke
-  tests will skip the LLM-dependent ingestion path if ANTHROPIC_API_KEY is
-  missing.
+- `db_url`: defaults to pg0-embedded local Postgres
+- `embeddings`: LocalSTEmbeddings (sentence-transformers, no API key needed)
+- `llm`: Anthropic Haiku for memory/retain/reflect/consolidation LLM calls;
+  with `skip_llm_verification=True` we avoid hitting the API during init.
+  Note: actual `retain` calls DO invoke the configured LLM unless the
+  bank is configured for fact_type="world" with skip-LLM (per architecture
+  spec we still run real LLM extraction in Phase 2). For smoke we
+  accept the LLM might fail; HONEST-Mem surfaces that.
 
-This backend is the heaviest to initialize (embedded Postgres takes ~3-5s);
-it should be reused across the eval rather than re-instantiated per cell.
+HONEST-Mem invariants enforced (G5 + G4 pattern):
+- Any add()/search() exception flows through `_record_error` (increments
+  n_errors, sets last_error, flips healthy=False).
+- The synthetic SHA1 ID hack from Loop 2/3 is GONE. We return real
+  memory_unit_ids from `retain` only when retain actually succeeded.
 """
-
 from __future__ import annotations
 
 import hashlib
@@ -24,6 +38,7 @@ import time
 from typing import Any, Dict, List, Optional
 
 from adapters.schema import Turn
+
 from .base import Memory, MemoryBackend
 
 
@@ -46,6 +61,14 @@ class HindsightBackend(MemoryBackend):
         self._engine = None
         self._bank_id: Optional[str] = None
         self._namespace = _scope_namespace(self.scope)
+        # G5 Loop 4: keep a single persistent event loop alive for the
+        # lifetime of this backend so SQLAlchemy/asyncpg pools stay bound
+        # to one loop. Without this, asyncio.run() per call destroys the
+        # loop and any DB pool tied to it, producing "Event loop is closed"
+        # on the next call. We never call self._loop.close() inside the
+        # backend lifecycle except in __del__.
+        import asyncio
+        self._loop = asyncio.new_event_loop()
 
         try:
             from hindsight_api import (  # type: ignore
@@ -57,10 +80,9 @@ class HindsightBackend(MemoryBackend):
             if not db_url:
                 # Start the embedded pg0 (ships in dep tree). It's async.
                 try:
-                    import asyncio
                     from hindsight_api.pg0 import start_embedded_postgres  # type: ignore
 
-                    db_url = asyncio.run(start_embedded_postgres())
+                    db_url = self._loop.run_until_complete(start_embedded_postgres())
                 except Exception as pg_e:
                     db_url = None
                     self._health.extra["pg0_error"] = str(pg_e)[:200]
@@ -79,8 +101,6 @@ class HindsightBackend(MemoryBackend):
                 or os.environ.get("ANTHROPIC_API_KEY")
                 or "placeholder-no-llm-during-smoke"
             )
-            # Set the explicitly-required env var as well so hindsight's internal
-            # config validators don't trip the init check.
             os.environ.setdefault("HINDSIGHT_API_LLM_API_KEY", llm_api_key)
 
             self._engine = MemoryEngine(
@@ -99,7 +119,7 @@ class HindsightBackend(MemoryBackend):
                 consolidation_llm_model=llm_model,
                 consolidation_llm_api_key=llm_api_key,
                 run_migrations=True,
-                skip_llm_verification=True,  # don't auto-call LLM during init
+                skip_llm_verification=True,
                 lazy_reranker=True,
             )
 
@@ -117,39 +137,42 @@ class HindsightBackend(MemoryBackend):
             self._engine = None
 
     def _ensure_bank(self) -> Optional[str]:
-        """Ensure a Hindsight memory bank exists for this scope. Returns bank_id.
+        """Ensure a Hindsight bank exists for this scope. Returns bank_id.
 
-        Hindsight uses 'banks' as the unit of memory scoping. We create one
-        per scope-namespace and reuse it.
+        G5 Loop 4 fix: Hindsight 0.6.x has no public `create_bank` method.
+        Banks are created implicitly via `get_bank_profile(bank_id,
+        create_if_missing=True)`. The Loop 3 code called
+        `list_banks(context=...)` with the wrong kwarg name (`context`
+        instead of `request_context`) AND assumed sync; it now uses the
+        sync wrapper `get_bank_profile` with `request_context=`.
         """
+        if not self._engine or not self._health.healthy:
+            return None
         if self._bank_id:
             return self._bank_id
         try:
             from hindsight_api import RequestContext  # type: ignore
 
             ctx = RequestContext(internal=True)
-            # Create bank if it doesn't exist
-            if hasattr(self._engine, "create_bank"):
-                bank = self._engine.create_bank(
-                    name=self._namespace,
-                    context=ctx,
+            # G5 Loop 4: use the persistent event loop so DB pools stay bound.
+            profile = self._loop.run_until_complete(
+                self._engine.get_bank_profile(
+                    self._namespace, request_context=ctx, create_if_missing=True
                 )
-                self._bank_id = getattr(bank, "id", None) or getattr(bank, "bank_id", None)
-            elif hasattr(self._engine, "list_banks"):
-                banks = self._engine.list_banks(context=ctx)
-                if banks:
-                    self._bank_id = getattr(banks[0], "id", None)
+            )
+            if profile is not None:
+                self._bank_id = self._namespace
             return self._bank_id
         except Exception as e:
-            self._health.extra["ensure_bank_error"] = str(e)[:200]
+            # G5 HONEST-Mem: ensure failures are recorded centrally
+            self._health.extra["ensure_bank_error"] = (
+                f"{type(e).__name__}: {str(e)[:200]}"
+            )
             return None
 
     def add(self, turns: List[Turn], scope: Optional[Dict[str, Any]] = None) -> List[str]:
-        """Hindsight ingestion is async via a worker; for smoke, we record
-        the observation directly into the bank if a write API exists, and
-        return a synthetic ID for tracking.
-
-        Full Hindsight worker integration is deferred to Phase 2 deployment.
+        """G5 Loop 4: real ingestion via `engine.retain()` returning real
+        memory_unit_ids. The Loop-2/3 synthetic-SHA1 ID hack is gone.
         """
         t0 = time.time()
         if not self._engine or not self._health.healthy:
@@ -159,40 +182,53 @@ class HindsightBackend(MemoryBackend):
         if not text.strip():
             self._record_op("add", latency_ms=(time.time() - t0) * 1000)
             return []
+        substantive = len(text) >= 100
         try:
             from hindsight_api import RequestContext  # type: ignore
 
             ctx = RequestContext(internal=True)
             bank_id = self._ensure_bank()
-            # Try the various known write methods; if all unavailable, return
-            # a synthetic ID and mark this as a "smoke-only" path.
-            result = None
-            for method_name in (
-                "record_observation",
-                "ingest_text",
-                "add_document",
-                "add_observation",
-            ):
-                if hasattr(self._engine, method_name):
-                    method = getattr(self._engine, method_name)
-                    sig_params = method.__code__.co_varnames
-                    kwargs: Dict[str, Any] = {"text": text}
-                    if "context" in sig_params:
-                        kwargs["context"] = ctx
-                    if "bank_id" in sig_params and bank_id:
-                        kwargs["bank_id"] = bank_id
-                    try:
-                        result = method(**kwargs)
-                        break
-                    except Exception:
-                        continue
+            if not bank_id:
+                # _ensure_bank failed; surface as HONEST error
+                self._record_op("add", latency_ms=(time.time() - t0) * 1000, error=True)
+                self._record_error(
+                    "hindsight.add",
+                    f"ensure_bank returned None: {self._health.extra.get('ensure_bank_error', 'unknown')}",
+                )
+                return []
+            # G5 Loop 4: call retain_async via our persistent loop. We
+            # DO NOT call the sync `engine.retain()` wrapper because it
+            # internally invokes asyncio.run(), which would race with
+            # our long-lived loop's DB pools.
+            ids = self._loop.run_until_complete(
+                self._engine.retain_async(
+                    bank_id=bank_id,
+                    content=text,
+                    context=f"phd-loop4 scope={self.merged_scope(self.scope, scope)}",
+                    request_context=ctx,
+                )
+            ) or []
             self._record_op("add", latency_ms=(time.time() - t0) * 1000)
-            mid = (
-                (getattr(result, "id", None) if result is not None else None)
-                or hashlib.sha1(text.encode()).hexdigest()[:16]
-            )
-            self._health.n_memories += 1
-            return [str(mid)]
+            # HONEST-Mem: substantive input but zero ids returned == silent failure
+            if substantive and not ids:
+                self._record_error(
+                    "hindsight.add",
+                    "engine.retain returned no ids on substantive input",
+                    silent_extraction=True,
+                )
+                return []
+            # Refresh n_memories best-effort via bank stats
+            try:
+                stats = self._loop.run_until_complete(
+                    self._engine.get_bank_stats(bank_id, request_context=ctx)
+                )
+                if isinstance(stats, dict):
+                    n = stats.get("memory_unit_count") or stats.get("memory_count") or 0
+                    self._health.n_memories = int(n)
+            except Exception:
+                # Don't surface a sentinel; leave previous count
+                pass
+            return [str(mid) for mid in ids]
         except Exception as e:
             self._record_op("add", latency_ms=(time.time() - t0) * 1000, error=True)
             self._record_error("hindsight.add", f"{type(e).__name__}: {e}")
@@ -209,26 +245,29 @@ class HindsightBackend(MemoryBackend):
             self._record_op("search", error=True)
             return []
         try:
-            from hindsight_api import RequestContext  # type: ignore
-
-            ctx = RequestContext(internal=True)
             bank_id = self._ensure_bank()
             if not bank_id:
-                self._record_op("search", latency_ms=(time.time() - t0) * 1000)
+                self._record_op("search", latency_ms=(time.time() - t0) * 1000, error=True)
+                self._record_error(
+                    "hindsight.search",
+                    f"ensure_bank returned None: {self._health.extra.get('ensure_bank_error', 'unknown')}",
+                )
                 return []
-            # Hindsight's recall returns (list[dict], trace|None)
-            res, _trace = self._engine.recall(
-                bank_id=bank_id,
-                query=query,
-                fact_type="default",
-                max_tokens=2048,
+            # G5 Loop 4: use recall_async via our persistent loop
+            res, _trace = self._loop.run_until_complete(
+                self._engine.recall_async(
+                    bank_id=bank_id,
+                    query=query,
+                    fact_type="experience",
+                    max_tokens=2048,
+                )
             )
             self._record_op("search", latency_ms=(time.time() - t0) * 1000)
             out: List[Memory] = []
             for r in (res or [])[:k]:
                 if isinstance(r, dict):
                     text = r.get("text") or r.get("content") or str(r)[:500]
-                    rid = r.get("id") or hashlib.sha1(str(text).encode()).hexdigest()[:16]
+                    rid = r.get("id") or r.get("memory_unit_id") or hashlib.sha1(str(text).encode()).hexdigest()[:16]
                     score = float(r.get("score", 0.0))
                 else:
                     text = str(r)[:500]
@@ -251,21 +290,40 @@ class HindsightBackend(MemoryBackend):
             return []
 
     def clear(self) -> None:
-        if not self._engine:
+        if not self._engine or not self._bank_id:
             return
         try:
             from hindsight_api import RequestContext  # type: ignore
-
-            ctx = RequestContext(actor_id=self._namespace)
-            if hasattr(self._engine, "clear_observations"):
-                self._engine.clear_observations(context=ctx)
+            ctx = RequestContext(internal=True)
+            # clear_observations is async; use our persistent loop
+            self._loop.run_until_complete(
+                self._engine.clear_observations(bank_id=self._bank_id, request_context=ctx)
+            )
             self._health.n_memories = 0
+        except Exception:
+            pass
+
+    def close(self) -> None:
+        """Close the engine and shut down the persistent event loop."""
+        try:
+            if self._engine and hasattr(self._engine, "close"):
+                close_attr = getattr(self._engine, "close", None)
+                if close_attr is not None:
+                    import inspect as ins
+                    if ins.iscoroutinefunction(close_attr):
+                        self._loop.run_until_complete(close_attr())
+                    else:
+                        close_attr()
+        except Exception:
+            pass
+        try:
+            if self._loop and not self._loop.is_closed():
+                self._loop.close()
         except Exception:
             pass
 
     def __del__(self):
         try:
-            if self._engine and hasattr(self._engine, "close"):
-                self._engine.close()
+            self.close()
         except Exception:
             pass

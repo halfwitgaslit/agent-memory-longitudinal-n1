@@ -1,0 +1,23 @@
+{
+  "scenario": "force_failure",
+  "init_health": {
+    "healthy": false,
+    "error_message": "Letta server unreachable at http://localhost:1: APIConnectionError: Connection error.",
+    "n_errors": 0,
+    "last_error": null
+  },
+  "post_health": {
+    "healthy": false,
+    "n_errors": 1,
+    "last_error": null,
+    "error_message": "Letta server unreachable at http://localhost:1: APIConnectionError: Connection error."
+  },
+  "add_ids": [],
+  "invariants": {
+    "healthy_after_failure_is_False": true,
+    "n_errors_gt_zero_or_init_unhealthy": true,
+    "last_error_populated_or_init_unhealthy": true,
+    "no_ids_returned": true
+  },
+  "all_invariants_pass": true
+}

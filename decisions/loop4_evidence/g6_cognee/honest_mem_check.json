@@ -1,0 +1,9 @@
+{
+  "verdict": "HONEST-FAILURE",
+  "invariants": {
+    "healthy_after_failure_is_False": true,
+    "some_error_surfaced": true,
+    "no_silent_success": true
+  },
+  "all_pass": true
+}
