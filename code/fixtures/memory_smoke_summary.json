@@ -35,14 +35,14 @@
       "error_message": null,
       "embedding_model": "none",
       "n_memories": 0,
-      "cumulative_latency_ms": 0.0,
+      "cumulative_latency_ms": 0.0011920928955078125,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 6.443234920501709,
+      "uptime_s": 6.934370040893555,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -86,14 +86,14 @@
       "error_message": null,
       "embedding_model": "none",
       "n_memories": 3,
-      "cumulative_latency_ms": 0.0457763671875,
+      "cumulative_latency_ms": 0.04792213439941406,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 6.443342924118042,
+      "uptime_s": 6.934493064880371,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -110,49 +110,50 @@
       "embedding_model": "BAAI/bge-small-en-v1.5"
     },
     "status": "OK",
-    "n_adds_executed": 0,
+    "n_adds_executed": 3,
     "search_results": [
       {
         "query": "Which Python version do we target?",
-        "n_results": 0,
-        "top_score": null,
-        "top_text_snippet": null
+        "n_results": 3,
+        "top_score": 0.8833309090870785,
+        "top_text_snippet": "The roomd project targets Python 3.13 as its Python version"
       },
       {
         "query": "How do we generate stable IDs?",
-        "n_results": 0,
-        "top_score": null,
-        "top_text_snippet": null
+        "n_results": 3,
+        "top_score": 0.7002664067635918,
+        "top_text_snippet": "The roomd project uses sha1[:16] (first 16 hex characters of the SHA-1 hash) of canonical content as the ID convention f"
       },
       {
         "query": "What's our convention for git worktrees?",
-        "n_results": 0,
-        "top_score": null,
-        "top_text_snippet": null
+        "n_results": 3,
+        "top_score": 0.7951322917918247,
+        "top_text_snippet": "The roomd project uses git worktrees extensively, with each worktree treated as an isolated branch"
       }
     ],
     "health_post": {
       "backend_name": "mem0",
-      "healthy": false,
-      "error_message": "mem0.add: silent LLM extraction failure (mem0 swallowed error). captured: LLM extraction failed: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CbQZJtNwc2b5aY2Z5Lzmn'}\n",
+      "healthy": true,
+      "error_message": null,
       "embedding_model": "BAAI/bge-small-en-v1.5",
-      "n_memories": 0,
-      "cumulative_latency_ms": 184.41295623779297,
+      "n_memories": 6,
+      "cumulative_latency_ms": 84320.54615020752,
       "n_searches": 3,
       "n_adds": 3,
-      "n_errors": 6,
-      "last_error": "mem0.add: silent LLM extraction failure (mem0 swallowed error). captured: LLM extraction failed: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CbQZJtNwc2b5aY2Z5Lzmn'}\n",
-      "last_error_ts_utc": 1779770095.7180932,
-      "n_silent_extraction_failures": 1,
-      "uptime_s": 6.6277830600738525,
+      "n_errors": 0,
+      "last_error": null,
+      "last_error_ts_utc": 0.0,
+      "n_silent_extraction_failures": 0,
+      "uptime_s": 91.25693106651306,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
       },
       "extra": {
         "collection": "phd_cd153d69287af192",
-        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-17/memory_smoke0/mem0_qdrant",
-        "llm_model": "claude-3-5-haiku-latest"
+        "store_dir": "/private/var/folders/b4/65hdq46j2_n4tmsq7dhg9k6r0000gq/T/pytest-of-aiSandbox/pytest-20/memory_smoke0/mem0_qdrant",
+        "llm_provider": "claude_cli",
+        "llm_model": "claude-haiku-4-5"
       }
     }
   },
@@ -199,7 +200,7 @@
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 6.681195974349976,
+      "uptime_s": 91.33269786834717,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -248,14 +249,14 @@
       "error_message": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
       "embedding_model": "BAAI/bge-small-en-v1.5",
       "n_memories": 0,
-      "cumulative_latency_ms": 57.3270320892334,
+      "cumulative_latency_ms": 55.90486526489258,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 7,
       "last_error": "cognee.add: LLMAPIKeyNotSetError: LLMAPIKeyNotSetError: LLM API key is not set. (Status code: 422)",
-      "last_error_ts_utc": 1779770095.9129422,
+      "last_error_ts_utc": 1779771161.566876,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 6.528625965118408,
+      "uptime_s": 91.21136093139648,
       "scope": {
         "user_id": "vector",
         "project": "roomd"
@@ -302,14 +303,14 @@
       "error_message": null,
       "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
       "n_memories": 3,
-      "cumulative_latency_ms": 0.03457069396972656,
+      "cumulative_latency_ms": 0.04696846008300781,
       "n_searches": 3,
       "n_adds": 3,
       "n_errors": 0,
       "last_error": null,
       "last_error_ts_utc": 0.0,
       "n_silent_extraction_failures": 0,
-      "uptime_s": 4.098669052124023,
+      "uptime_s": 88.3307089805603,
       "scope": {
         "user_id": "vector",
         "project": "roomd"

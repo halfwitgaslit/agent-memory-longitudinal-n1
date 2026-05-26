@@ -2,10 +2,10 @@
   "started_utc": "2026-05-25T00:00:00Z",
   "baseline_tests_passing": "70/70",
   "git_commit_at_start": "4c913cd",
-  "spend_loop2_usd": 0.0,
+  "spend_loop2_usd": 0.50,
   "deliverables": {
-    "1_silent_failure_reporting": {"status": "pending"},
-    "2_mem0_or_letta_end_to_end": {"status": "pending"},
+    "1_silent_failure_reporting": {"status": "validated", "evidence": "decisions/loop2_evidence/02_silent_failure_fixed.json"},
+    "2_mem0_or_letta_end_to_end": {"status": "validated", "evidence": "decisions/loop2_evidence/d2_mem0_e2e_report.json", "backend": "mem0+claude_cli"},
     "3_skill_fires_in_session": {"status": "pending"},
     "4_arm_switching": {"status": "pending"},
     "5_cross_cli_bridging": {"status": "pending"},

@@ -1,0 +1,100 @@
+{
+  "started_utc": 1779770724.402614,
+  "stages": [
+    {
+      "name": "parse_real_session",
+      "fixture": "/Users/aiSandbox/.claude/projects/-Users-aiSandbox-github-roomd--claude-worktrees-admiring-merkle-f0e725/8c877d1d-92d2-4e90-a5fb-a8efa211e3e4.jsonl",
+      "n_turns": 10
+    },
+    {
+      "name": "init_backend",
+      "healthy": true,
+      "llm_provider": "claude_cli",
+      "llm_model": "claude-haiku-4-5",
+      "error_message": null
+    },
+    {
+      "name": "ingest_real",
+      "skipped_idempotent": true,
+      "n_ids_returned": 0,
+      "post_n_memories": 4,
+      "n_adds": 1,
+      "n_errors": 0,
+      "healthy": true,
+      "last_error": null,
+      "n_silent_extraction_failures": 0,
+      "cli_meter": {
+        "total_calls": 0,
+        "total_usd": 0.0,
+        "total_input_tokens": 0,
+        "total_output_tokens": 0
+      }
+    },
+    {
+      "name": "search_real",
+      "results": [
+        {
+          "query": "roomd",
+          "n_results": 4,
+          "top_score": 0.36354568677721405,
+          "top_text": "roomd HIGH severity hardcoded configurations: bind host 0.0.0.0 (suggest ROOMD_HOST env var), JSON body limit \"1mb\" (suggest ROOMD_MAX_REQUEST_SIZE), room instructions max length 4000 characters (sugg"
+        },
+        {
+          "query": "what work was being done",
+          "n_results": 4,
+          "top_score": 0.5838232369060239,
+          "top_text": "User requested a comprehensive hardcoded configuration audit of the roomd codebase to identify values that should be configurable instead of hardcoded"
+        },
+        {
+          "query": "Run a deep investigation on configurations that are not configurable at the top ",
+          "n_results": 4,
+          "top_score": 0.3797107642308168,
+          "top_text": "User requested a comprehensive hardcoded configuration audit of the roomd codebase to identify values that should be configurable instead of hardcoded"
+        }
+      ]
+    },
+    {
+      "name": "sentinel_roundtrip",
+      "sentinel_text": "our project uses Pydantic v2 for all schema definitions",
+      "ids_returned": [
+        "fa4e4085-49b9-4133-87ce-ae1fbe0daf65"
+      ],
+      "n_search_results": 5,
+      "sentinel_found": true,
+      "top_results": [
+        {
+          "id": "fa4e4085-49b9-4133-87ce-ae1fbe0daf65",
+          "score": 0.4829605186817014,
+          "text": "User's project uses Pydantic v2 for all schema definitions"
+        },
+        {
+          "id": "5756ef5f-83fd-43dd-a09f-91f14b5e3ee3",
+          "score": 0.4047826380279116,
+          "text": "User defined roomd configuration scope: developers using roomd as a library must be able to fully manipulate impactful variables via central config(s), and ROOMD internal systems must be able to easil"
+        },
+        {
+          "id": "7dba250c-3a23-48b7-a4a4-27c5d4aef908",
+          "score": 0.32724744649835436,
+          "text": "User requested a comprehensive hardcoded configuration audit of the roomd codebase to identify values that should be configurable instead of hardcoded"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "n_memories": 5,
+    "n_adds": 2,
+    "n_searches": 4,
+    "n_errors": 0,
+    "healthy": true,
+    "cli_meter": {
+      "total_calls": 1,
+      "total_usd": 0.0372,
+      "total_input_tokens": 9,
+      "total_output_tokens": 607
+    },
+    "store_dir": "/tmp/phd_loop2_mem0_qdrant"
+  },
+  "status": "PASS",
+  "ended_utc": 1779770735.763314,
+  "duration_s": 11.360699892044067
+}
