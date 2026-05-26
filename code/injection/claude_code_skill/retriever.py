@@ -87,13 +87,33 @@ def _log_injection(record: dict) -> None:
         f.write(json.dumps(record, sort_keys=True) + "\n")
 
 
+def _canonical_subject_id() -> str:
+    """Read the pre-registered canonical subject_id from experimental_constants.
+
+    Loop 4 G11: the skill's --scope-user-id default was previously $USER which
+    diverged from the data-seeding script's user_id='vector'. We now read the
+    locked constant so the skill and the seeding pipeline always agree.
+    Falls back to "vector" if the constants module is unreachable (it should
+    always be reachable because sys.path was set above).
+    """
+    try:
+        from eval.experimental_constants import EXPERIMENTAL_CONSTANTS  # type: ignore
+        return str(EXPERIMENTAL_CONSTANTS["subject"]["subject_id"])
+    except Exception:
+        return "vector"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", default=os.environ.get("ROOMD_MEM_ARM", "null"))
     ap.add_argument("--query", required=True)
     ap.add_argument("--k", type=int, default=5)
+    # G11 fix: default to the pre-registered canonical subject_id (vector),
+    # NOT to $USER. Setting ROOMD_SCOPE_USER_ID overrides this default for
+    # exceptional cases.
     ap.add_argument(
-        "--scope-user-id", default=os.environ.get("USER", "vector")
+        "--scope-user-id",
+        default=os.environ.get("ROOMD_SCOPE_USER_ID", _canonical_subject_id()),
     )
     ap.add_argument("--scope-project", default="roomd")
     ap.add_argument("--scope-worktree", default=os.environ.get("ROOMD_WORKTREE", "main"))

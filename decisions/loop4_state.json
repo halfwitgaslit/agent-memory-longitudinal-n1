@@ -1,0 +1,86 @@
+{
+  "loop": 4,
+  "started_utc": "2026-05-26T00:00:00Z",
+  "owner": "Vector (stephengduke@gmail.com)",
+  "priority_commit": "4c913cd",
+  "prereg_hash": "14645d41cc73fe32f82d8ac4ba9b6aa0940750be244d0473a3f29553b21b6fea",
+  "baseline_pytest_count": 77,
+  "baseline_pytest_status": "PASS (after clearing stale ~/.mem0/migrations_qdrant/.lock)",
+  "gaps": {
+    "G1": {
+      "title": "Skill never auto-fires",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Add UserPromptSubmit hook in ~/.claude/settings.json + ~/.claude/hooks/roomd_memory_inject.sh"
+    },
+    "G2": {
+      "title": "PDDC validated on synthetic, not real data",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Re-run PDDC on 22 real roomd compaction trajectories from Investigator D"
+    },
+    "G3": {
+      "title": "GCMP denominator bug + fork_worktree inheritance throwaway dict",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Fix is_eligible() formula; fix fork_worktree IDs persistence; rewrite calibration comment honestly"
+    },
+    "G4": {
+      "title": "Letta silently fails every operation while reporting healthy=True",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Register model on Letta server OR change default model; fix HONEST-Mem invariant"
+    },
+    "G5": {
+      "title": "Hindsight writes counter increments but no actual data",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Fix _ensure_bank() API signature; add post-add verification"
+    },
+    "G6": {
+      "title": "Cognee backend has no API-key fallback",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Route Cognee LLM through claude_cli_llm.py shim OR add to skip-list"
+    },
+    "G7": {
+      "title": "Mem0 cross-process qdrant lock blocks all subsequent access",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Subprocess isolation OR per-scope qdrant instances OR global lock manager"
+    },
+    "G8": {
+      "title": "D2 and D5 evidence is unreproducible (idempotent skips)",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Rerun D2 and D5 with fresh stores; capture actual cli_meter and new_ids"
+    },
+    "G9": {
+      "title": "-1 sentinel still leaks in D5 evidence file",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Grep for n_memories.*-1 / return -1 / sentinel returns; eliminate them"
+    },
+    "G10": {
+      "title": "CLI attribution lost in bridge mode",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Write _origin_cli field to memory metadata on add(); verify round-trip"
+    },
+    "G11": {
+      "title": "Skill scope user_id mismatch with seeded data",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Read canonical user_id from experimental_constants.py (vector); thread through retriever + hook"
+    },
+    "G12": {
+      "title": "Pre-reg drift: Mem0 LLM billing path",
+      "status": "pending",
+      "evidence": null,
+      "fix": "Write phd/preregistration/v1_amendment_001.md (DO NOT modify v1.md)"
+    }
+  },
+  "spend_usd": 0.0,
+  "spend_cap_usd": 400,
+  "commits": []
+}

@@ -1,0 +1,19 @@
+{
+  "label": "control_no_hook",
+  "env_extra": {
+    "ROOMD_MEM_ARM": "null",
+    "ROOMD_PROJECT_ROOTS": "/this/path/does/not/exist",
+    "ROOMD_PHD_VENV_PYTHON": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd/code/.venv/bin/python",
+    "ROOMD_PHD_CODE_DIR": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd/code"
+  },
+  "prompt": "What does ALIGATOR_PHRASE_8821 refer to? Answer in one short sentence; if you don't know, say 'I have no memory of that phrase.'",
+  "cwd": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd",
+  "pre_log_lines": 55,
+  "post_log_lines": 55,
+  "new_log_lines": 0,
+  "duration_s": 5.81,
+  "returncode": 0,
+  "stdout": "I have no memory of that phrase.\n",
+  "stderr": "",
+  "sentinel_in_output": false
+}

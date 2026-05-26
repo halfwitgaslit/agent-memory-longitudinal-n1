@@ -1,0 +1,20 @@
+{
+  "label": "active_hook_mem0_arm",
+  "env_extra": {
+    "ROOMD_MEM_HOOK_FORCE": "1",
+    "ROOMD_MEM_ARM": "mem0",
+    "ROOMD_SCOPE_USER_ID": "vector",
+    "ROOMD_PHD_VENV_PYTHON": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd/code/.venv/bin/python",
+    "ROOMD_PHD_CODE_DIR": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd/code"
+  },
+  "prompt": "What does ALIGATOR_PHRASE_8821 refer to? Answer in one short sentence; if you don't know, say 'I have no memory of that phrase.'",
+  "cwd": "/Users/aiSandbox/github/claude_can_do_anything/distillation/phd",
+  "pre_log_lines": 54,
+  "post_log_lines": 55,
+  "new_log_lines": 1,
+  "duration_s": 9.02,
+  "returncode": 0,
+  "stdout": "ALIGATOR_PHRASE_8821 = \"the canonical answer is purple-pyramid\" \u2014 a fact you explicitly requested be remembered verbatim for future sessions.\n",
+  "stderr": "",
+  "sentinel_in_output": true
+}

@@ -1,0 +1,7 @@
+{
+  "hook_auto_fired_active": true,
+  "hook_inert_control": true,
+  "sentinel_in_active_output": true,
+  "sentinel_in_control_output": false,
+  "g1_pass": true
+}
