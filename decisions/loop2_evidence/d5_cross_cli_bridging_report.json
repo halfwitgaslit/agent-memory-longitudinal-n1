@@ -1,0 +1,72 @@
+{
+  "started_utc": 1779798561.002892,
+  "fixture": "/Users/aiSandbox/.codex/sessions/2026/05/18/rollout-2026-05-18T10-16-10-019e3b71-bf14-78c2-a9f7-1f848004971b.jsonl",
+  "codex_parse": {
+    "cli": "codex",
+    "n_turns": 62,
+    "cwd": "/Users/aiSandbox/.codex/worktrees/113f/roomd"
+  },
+  "substantive_picked": 5,
+  "uid_hash": {
+    "codex": "phd_088a9f012a955307",
+    "claude_code": "phd_a0e8367916906e6d",
+    "bridged_by_default": false,
+    "bridge_scope_no_cli": "phd_a07d5722b5a339f9"
+  },
+  "ingest": {
+    "skipped_idempotent": true,
+    "new_ids_count": 0,
+    "pre_count": 4,
+    "post_count": 4,
+    "cli_meter_after_ingest": {
+      "total_calls": 0,
+      "total_usd": 0.0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0
+    }
+  },
+  "search": {
+    "queries": [
+      {
+        "query": "What dependency drift did we find?",
+        "n_results": 4,
+        "top_score": 0.49211197108537874,
+        "top_text": "zod dependency drift identified in roomd (as of May 14, 2026): root package-lock.json resolves to 4.3.6 while examples/tasks-demo/package-lock.json resolves to 4.4.3, despite both manifests declaring "
+      },
+      {
+        "query": "roomd",
+        "n_results": 4,
+        "top_score": 0.3149724477305497,
+        "top_text": "roomd repository has Node version policy: engines.node >=22 <26 with .nvmrc pinning default to v22; local runtime is node v22.22.2 and npm 10.9.7"
+      },
+      {
+        "query": "What zod version is being used?",
+        "n_results": 4,
+        "top_score": 0.4288430405556792,
+        "top_text": "Recommended fix for roomd zod drift: refresh root package-lock.json to zod 4.4.3 to align with examples/tasks-demo, the preferred minimal alignment approach over pinning both to 4.3.6"
+      },
+      {
+        "query": "automation",
+        "n_results": 4,
+        "top_score": 0.5242248912037734,
+        "top_text": "Recommended fix for roomd zod drift: refresh root package-lock.json to zod 4.4.3 to align with examples/tasks-demo, the preferred minimal alignment approach over pinning both to 4.3.6"
+      }
+    ],
+    "any_hit": true
+  },
+  "walled_check": {
+    "scope_with_cli_claude_code_uid": "phd_a0e8367916906e6d",
+    "n_memories_under_walled_uid": -1,
+    "search_results_under_walled_scope": 0,
+    "finding": "When `cli` is included in scope, partitions are walled. To bridge, OMIT the `cli` key OR use a fixed `cli` for both writers and readers."
+  },
+  "status": "PASS",
+  "ended_utc": 1779798562.2530298,
+  "duration_s": 1.2501378059387207,
+  "final_cli_meter": {
+    "total_calls": 0,
+    "total_usd": 0.0,
+    "total_input_tokens": 0,
+    "total_output_tokens": 0
+  }
+}

@@ -220,6 +220,8 @@ class Mem0Backend(MemoryBackend):
             silent_fail_signals = (
                 "LLM extraction failed" in captured
                 or "Could not resolve authentication" in captured
+                or "Error parsing extraction response" in captured
+                or "Expecting value" in captured
             )
             if not ids and substantive and silent_fail_signals:
                 self._record_error(

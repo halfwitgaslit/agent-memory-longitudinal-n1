@@ -241,16 +241,16 @@ def register_claude_cli_provider() -> None:
                 if response_format.get("type") in ("json_object", "json"):
                     need_json = True
             if need_json:
-                if system_message:
-                    system_message += (
-                        "\n\nIMPORTANT: Output ONLY valid JSON. No code fences. "
-                        "No prose. Just a single JSON object."
-                    )
-                else:
-                    system_message = (
-                        "Output ONLY valid JSON. No code fences. No prose. "
-                        "Just a single JSON object."
-                    )
+                json_directive = (
+                    "\n\n=== STRICT OUTPUT REQUIREMENT ===\n"
+                    "Your ENTIRE response MUST be a single JSON object. "
+                    "Start with `{` and end with `}`. NOTHING ELSE.\n"
+                    "NO markdown. NO code fences (```). NO explanations. NO prose.\n"
+                    "Do NOT respond with a markdown table, list, or summary — return JSON.\n"
+                    "If you have nothing to extract, return: {\"memory\": []}\n"
+                    "If you violate this format the downstream parser will fail and your work is lost.\n"
+                )
+                system_message = (system_message + json_directive) if system_message else json_directive.strip()
             prompt = _format_prompt(system_message, filtered)
             t0 = time.time()
             data = _run_claude_cli(prompt, model=self.config.model)
@@ -260,6 +260,44 @@ def register_claude_cli_provider() -> None:
             # Strip code fences if Claude wrapped JSON despite instruction
             if need_json:
                 text = _strip_code_fences(text)
+                # Validate JSON; one retry with an even more explicit prompt
+                try:
+                    json.loads(text)
+                except json.JSONDecodeError:
+                    logger.warning(
+                        "claude_cli returned non-JSON (first 200 chars: %r); retrying",
+                        text[:200],
+                    )
+                    retry_system = system_message + (
+                        "\n\nYOUR PREVIOUS RESPONSE WAS NOT VALID JSON.\n"
+                        f"Previous response started with: {text[:100]!r}\n"
+                        "This time, output ONLY the JSON object. "
+                        "Start with `{`. End with `}`. Nothing else.\n"
+                        "If unsure, return exactly: {\"memory\": []}\n"
+                    )
+                    retry_prompt = _format_prompt(retry_system, filtered)
+                    data2 = _run_claude_cli(retry_prompt, model=self.config.model)
+                    text = data2.get("result", "") or ""
+                    text = _strip_code_fences(text)
+                    # Accumulate metering for retry below (single global decl
+                    # is at the end of the function for both initial + retry).
+                    usage2 = data2.get("usage") or {}
+                    cost2 = float(data2.get("total_cost_usd") or 0.0)
+                    # Final validate; if still invalid, fall back to empty
+                    try:
+                        json.loads(text)
+                    except json.JSONDecodeError:
+                        logger.error(
+                            "claude_cli retry STILL not JSON (first 200: %r); returning empty memory",
+                            text[:200],
+                        )
+                        text = '{"memory": []}'
+                else:
+                    usage2 = {}
+                    cost2 = 0.0
+            else:
+                usage2 = {}
+                cost2 = 0.0
 
             usage = data.get("usage") or {}
             cost = float(data.get("total_cost_usd") or 0.0)
@@ -269,6 +307,12 @@ def register_claude_cli_provider() -> None:
             _TOTAL_USD += cost
             _TOTAL_INPUT_TOKENS += int(usage.get("input_tokens") or 0)
             _TOTAL_OUTPUT_TOKENS += int(usage.get("output_tokens") or 0)
+            # Retry costs also counted
+            if cost2 > 0 or usage2:
+                _TOTAL_CALLS += 1
+                _TOTAL_USD += cost2
+                _TOTAL_INPUT_TOKENS += int(usage2.get("input_tokens") or 0)
+                _TOTAL_OUTPUT_TOKENS += int(usage2.get("output_tokens") or 0)
 
             logger.info(
                 "claude_cli call: %dms, $%.4f, in=%d out=%d total_usd_so_far=$%.4f",
@@ -286,7 +330,10 @@ def register_claude_cli_provider() -> None:
 
 
 def _strip_code_fences(text: str) -> str:
-    """Strip ```json ... ``` fences if the CLI wrapped its output despite instruction."""
+    """Strip ```json ... ``` fences if the CLI wrapped its output despite instruction.
+
+    Also extracts the first balanced JSON object if there's surrounding prose.
+    """
     t = text.strip()
     if t.startswith("```"):
         # remove opening fence
@@ -296,4 +343,54 @@ def _strip_code_fences(text: str) -> str:
         # remove closing fence
         if t.endswith("```"):
             t = t[: -3]
-    return t.strip()
+    t = t.strip()
+    # If we still don't have valid JSON, try to extract the first balanced
+    # {...} block. This handles cases where Claude wrote JSON then appended
+    # prose ("Here's a summary...") afterwards.
+    if t and (not t.startswith("{") or not _is_valid_json(t)):
+        extracted = _extract_first_json_object(t)
+        if extracted is not None:
+            return extracted
+    return t
+
+
+def _is_valid_json(s: str) -> bool:
+    try:
+        json.loads(s)
+        return True
+    except Exception:
+        return False
+
+
+def _extract_first_json_object(s: str) -> Optional[str]:
+    """Return the first balanced {...} object found in s, or None."""
+    # Find first '{'
+    start = s.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_str = False
+    escape = False
+    for i in range(start, len(s)):
+        c = s[i]
+        if escape:
+            escape = False
+            continue
+        if c == "\\" and in_str:
+            escape = True
+            continue
+        if c == '"':
+            in_str = not in_str
+            continue
+        if in_str:
+            continue
+        if c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = s[start : i + 1]
+                if _is_valid_json(candidate):
+                    return candidate
+                return None
+    return None

@@ -65,3 +65,51 @@ factory correctly dispatched.
 Evidence: `decisions/loop2_evidence/d4_arm_switching_report.json`
 Cumulative spend: ~$1.25 (D4 added ~$0.20 for the mem0 seed extraction).
 
+
+## 2026-05-26T08:55:00Z — D5 VALIDATED + 2 new silent failures fixed
+
+D5 surfaced two NEW silent-failure modes (which got fed into D7):
+
+A. **`Error parsing extraction response` was not caught by HONEST-Mem.**
+   Claude returned a markdown-table response (not JSON) on substantive
+   Codex turns about dependency drift. Mem0's parser logged the error
+   and returned []; our `silent_fail_signals` only matched "LLM extraction
+   failed" / "Could not resolve authentication". Fixed: added
+   "Error parsing extraction response" and "Expecting value" to the
+   regex set in mem0_backend.add().
+
+B. **`claude_cli` returned non-JSON when prompted with json_object.**
+   Mitigations layered:
+   - Hardened the JSON directive to scream "ONLY JSON, NO MARKDOWN, NO TABLES"
+   - Added a one-shot retry with even more explicit "previous response was
+     not JSON" coaching
+   - Added `_extract_first_json_object()` that walks the response and
+     extracts the first balanced `{...}` block (handles Claude appending
+     prose/tables after a JSON block)
+
+D5 itself:
+1. Parsed a real Codex roomd-worktree rollout (62 turns).
+2. Filtered out Codex sandbox/permissions/AGENTS.md boilerplate
+   (these dilute fact extraction because they're not really conversational).
+3. Ingested 5 substantive turns under a `bridge_scope` (no `cli` key).
+4. Searched from a "Claude Code style" reader using the SAME bridge_scope:
+   4 results per query, top_score 0.32-0.54, including:
+   - "Recommended fix for roomd zod drift: refresh root package-lock..."
+   - "roomd repository has Node version policy: engines.node >=22 <26..."
+5. Walled check: with `cli="claude_code"` in the scope, that partition
+   has 0 visible memories — confirming "shared partition for bridging,
+   walled partition for isolation" works as designed.
+
+Architecture finding: cross-CLI bridging requires OMITTING `cli` from the
+scope hash, OR using a fixed CLI marker for both writers and readers.
+The retriever today builds `cli` from --scope-cli (default "claude_code").
+Phase 2 onboarding will need to document this.
+
+Note: there's a minor cosmetic issue where a stale Mem0Backend instance
+holding a closed qdrant client returns -1 from `_safe_count_memories`,
+but `inspect()` correctly refreshes to 0 (no -1 sentinel leak — the
+HONEST-Mem invariant is intact).
+
+Tests: 75/75 still pass.
+Cumulative spend: ~$2.50 (D5 added ~$1.25 of claude_cli calls).
+
